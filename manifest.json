@@ -1,0 +1,22 @@
+{
+  "name": "MS Section 6 Youth",
+  "short_name": "Section 6",
+  "description": "Section 6 Youth Director App - Mississippi District UPCI",
+  "start_url": "app.html",
+  "display": "standalone",
+  "background_color": "#f0f2f5",
+  "theme_color": "#1e3a5f",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

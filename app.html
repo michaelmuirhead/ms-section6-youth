@@ -1,0 +1,2966 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MS Section 6 Youth</title>
+<meta name="description" content="Section 6 Youth Director App - Mississippi District UPCI">
+<meta name="theme-color" content="#1e3a5f">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="manifest" href="manifest.json">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+:root {
+  --primary: #1e3a5f;
+  --primary-light: #2a5080;
+  --primary-dark: #0f1f33;
+  --accent: #e8a838;
+  --accent-light: #f0c060;
+  --success: #2ecc71;
+  --danger: #e74c3c;
+  --warning: #f39c12;
+  --bg: #f0f2f5;
+  --card: #ffffff;
+  --text: #1a1a2e;
+  --text-muted: #6b7280;
+  --border: #e5e7eb;
+  --shadow: 0 1px 3px rgba(0,0,0,0.1), 0 1px 2px rgba(0,0,0,0.06);
+  --shadow-lg: 0 10px 25px rgba(0,0,0,0.1);
+  --radius: 12px;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'Inter', -apple-system, sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; padding-bottom: 80px; }
+
+/* ===== HEADER ===== */
+.header { background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%); color: white; padding: 16px 20px 20px; position: sticky; top: 0; z-index: 100; box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
+.header-top { display: flex; align-items: center; justify-content: space-between; }
+.header h1 { font-size: 1.3rem; font-weight: 800; letter-spacing: -0.02em; }
+.header p { font-size: 0.75rem; opacity: 0.8; font-weight: 500; }
+.header-badge { background: var(--accent); color: var(--primary-dark); font-size: 0.6rem; font-weight: 700; padding: 4px 10px; border-radius: 20px; text-transform: uppercase; letter-spacing: 0.05em; }
+
+/* ===== BOTTOM NAV ===== */
+.bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: white; display: flex; justify-content: space-around; padding: 6px 0 max(6px, env(safe-area-inset-bottom)); box-shadow: 0 -2px 10px rgba(0,0,0,0.1); z-index: 100; }
+.nav-item { display: flex; flex-direction: column; align-items: center; gap: 1px; padding: 4px 8px; border: none; background: none; color: var(--text-muted); font-size: 0.6rem; font-weight: 600; cursor: pointer; border-radius: 8px; transition: all 0.2s; }
+.nav-item.active { color: var(--primary); }
+.nav-item.active svg { stroke: var(--primary); }
+.nav-item svg { width: 20px; height: 20px; stroke: var(--text-muted); stroke-width: 2; fill: none; }
+
+/* ===== PAGES ===== */
+.page { display: none; padding: 14px; max-width: 640px; margin: 0 auto; }
+.page.active { display: block; }
+
+/* ===== CARDS ===== */
+.card { background: var(--card); border-radius: var(--radius); padding: 16px; margin-bottom: 12px; box-shadow: var(--shadow); border: 1px solid var(--border); }
+.card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+.card-title { font-size: 0.95rem; font-weight: 700; color: var(--text); }
+
+/* ===== STATS ===== */
+.stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 14px; }
+.stat-card { background: var(--card); border-radius: var(--radius); padding: 14px; box-shadow: var(--shadow); border: 1px solid var(--border); text-align: center; }
+.stat-value { font-size: 1.5rem; font-weight: 800; color: var(--primary); line-height: 1.2; }
+.stat-label { font-size: 0.65rem; color: var(--text-muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; margin-top: 3px; }
+.stat-card.accent .stat-value { color: var(--accent); }
+.stat-card.success .stat-value { color: var(--success); }
+
+/* ===== BUTTONS ===== */
+.btn { display: inline-flex; align-items: center; gap: 6px; padding: 10px 16px; border: none; border-radius: 8px; font-size: 0.82rem; font-weight: 600; cursor: pointer; transition: all 0.2s; font-family: inherit; }
+.btn-primary { background: var(--primary); color: white; }
+.btn-primary:hover { background: var(--primary-light); }
+.btn-accent { background: var(--accent); color: var(--primary-dark); }
+.btn-danger { background: var(--danger); color: white; padding: 6px 12px; font-size: 0.72rem; }
+.btn-success { background: var(--success); color: white; }
+.btn-sm { padding: 6px 12px; font-size: 0.72rem; }
+.btn-full { width: 100%; justify-content: center; }
+.btn-outline { background: transparent; border: 2px solid var(--primary); color: var(--primary); }
+.btn-outline-light { background: transparent; border: 2px solid var(--border); color: var(--text-muted); }
+
+/* ===== FORMS ===== */
+.form-group { margin-bottom: 12px; }
+.form-label { display: block; font-size: 0.75rem; font-weight: 600; color: var(--text); margin-bottom: 4px; }
+.form-input, .form-select, .form-textarea { width: 100%; padding: 10px 12px; border: 2px solid var(--border); border-radius: 8px; font-size: 0.88rem; font-family: inherit; transition: border-color 0.2s; background: white; }
+.form-input:focus, .form-select:focus, .form-textarea:focus { outline: none; border-color: var(--primary); }
+.form-textarea { resize: vertical; min-height: 70px; }
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+
+/* ===== LIST ITEMS ===== */
+.list-item { display: flex; align-items: flex-start; gap: 12px; padding: 12px 0; border-bottom: 1px solid var(--border); }
+.list-item:last-child { border-bottom: none; }
+.list-icon { width: 38px; height: 38px; border-radius: 10px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 1rem; }
+.list-icon.blue { background: #e8f0fe; }
+.list-icon.gold { background: #fef3cd; }
+.list-icon.green { background: #d4edda; }
+.list-icon.red { background: #f8d7da; }
+.list-icon.purple { background: #e8daef; }
+.list-content { flex: 1; min-width: 0; }
+.list-title { font-weight: 600; font-size: 0.88rem; }
+.list-subtitle { font-size: 0.75rem; color: var(--text-muted); margin-top: 2px; }
+.list-meta { display: flex; gap: 8px; margin-top: 5px; flex-wrap: wrap; }
+.meta-tag { font-size: 0.65rem; font-weight: 600; padding: 2px 8px; border-radius: 12px; background: var(--bg); color: var(--text-muted); }
+.meta-tag.highlight { background: #e8f0fe; color: var(--primary); }
+.meta-tag.gold { background: #fef3cd; color: #856404; }
+
+/* ===== MODAL ===== */
+.modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 200; align-items: flex-end; justify-content: center; }
+.modal-overlay.active { display: flex; }
+.modal { background: white; border-radius: 16px 16px 0 0; width: 100%; max-width: 640px; max-height: 90vh; overflow-y: auto; padding: 20px; animation: slideUp 0.3s ease; }
+@keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+.modal-title { font-size: 1.05rem; font-weight: 700; margin-bottom: 16px; display: flex; justify-content: space-between; align-items: center; }
+.modal-close { background: none; border: none; font-size: 1.4rem; cursor: pointer; color: var(--text-muted); padding: 4px; }
+.btn-row { display: flex; gap: 10px; margin-top: 16px; }
+.btn-row .btn { flex: 1; }
+
+/* ===== BUDGET ===== */
+.budget-bar { height: 8px; background: var(--bg); border-radius: 4px; overflow: hidden; }
+.budget-bar-fill { height: 100%; border-radius: 4px; transition: width 0.5s ease; }
+.budget-bar-labels { display: flex; justify-content: space-between; font-size: 0.68rem; color: var(--text-muted); margin-top: 3px; }
+
+/* ===== TAGS ===== */
+.tag { display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: 0.68rem; font-weight: 600; }
+.tag-income { background: #d4edda; color: #155724; }
+.tag-expense { background: #f8d7da; color: #721c24; }
+
+/* ===== TABS ===== */
+.tab-bar { display: flex; gap: 4px; background: var(--bg); padding: 4px; border-radius: 10px; margin-bottom: 14px; overflow-x: auto; }
+.tab-btn { flex: 1; padding: 8px 6px; border: none; background: transparent; border-radius: 8px; font-size: 0.72rem; font-weight: 600; color: var(--text-muted); cursor: pointer; transition: all 0.2s; font-family: inherit; white-space: nowrap; }
+.tab-btn.active { background: white; color: var(--primary); box-shadow: var(--shadow); }
+
+/* ===== EMPTY STATE ===== */
+.empty-state { text-align: center; padding: 30px 20px; color: var(--text-muted); }
+.empty-state p { font-size: 0.82rem; font-weight: 500; }
+
+/* ===== PROGRESS ===== */
+.progress-ring { position: relative; display: inline-flex; align-items: center; justify-content: center; }
+.progress-ring svg { transform: rotate(-90deg); }
+.progress-ring .progress-text { position: absolute; font-size: 0.9rem; font-weight: 800; }
+
+/* ===== GOAL CARD ===== */
+.goal-bar { height: 12px; background: var(--bg); border-radius: 6px; overflow: hidden; margin: 8px 0; }
+.goal-bar-fill { height: 100%; border-radius: 6px; transition: width 0.6s ease; background: linear-gradient(90deg, var(--primary) 0%, var(--accent) 100%); }
+
+/* ===== PHOTO THUMB ===== */
+.photo-thumb { width: 60px; height: 60px; border-radius: 8px; object-fit: cover; cursor: pointer; border: 2px solid var(--border); }
+.photo-grid { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px; }
+
+/* ===== REMINDER BADGE ===== */
+.reminder-badge { background: var(--danger); color: white; font-size: 0.6rem; font-weight: 700; padding: 2px 6px; border-radius: 10px; margin-left: 6px; }
+
+/* ===== ROTATION ===== */
+.rotation-item { display: flex; align-items: center; gap: 12px; padding: 10px 12px; border-radius: 8px; margin-bottom: 6px; }
+.rotation-item.next { background: #e8f0fe; border: 2px solid var(--primary); }
+.rotation-item.past { opacity: 0.5; }
+.rotation-number { width: 28px; height: 28px; border-radius: 50%; background: var(--primary); color: white; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: 700; flex-shrink: 0; }
+.rotation-item.past .rotation-number { background: var(--text-muted); }
+
+/* ===== CHURCH CARD ===== */
+.church-card { display: flex; gap: 12px; padding: 12px; }
+.church-avatar { width: 44px; height: 44px; border-radius: 50%; background: var(--primary); color: white; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.85rem; flex-shrink: 0; }
+
+/* ===== MISSION ===== */
+.mission-hero { background: linear-gradient(135deg, var(--primary) 0%, #2a6090 100%); border-radius: var(--radius); padding: 20px; color: white; text-align: center; margin-bottom: 14px; }
+.mission-hero h3 { font-size: 1.1rem; font-weight: 800; margin-bottom: 4px; }
+.mission-amount { font-size: 2rem; font-weight: 800; color: var(--accent); }
+.mission-goal { font-size: 0.8rem; opacity: 0.8; }
+.mission-bar { height: 14px; background: rgba(255,255,255,0.2); border-radius: 7px; overflow: hidden; margin: 10px 0; }
+.mission-bar-fill { height: 100%; border-radius: 7px; background: linear-gradient(90deg, var(--accent) 0%, var(--accent-light) 100%); transition: width 0.6s; }
+
+/* ===== SEARCH ===== */
+.search-bar { margin-bottom: 12px; }
+
+/* ===== ACTIONS ===== */
+.actions-row { display: flex; gap: 6px; margin-left: auto; }
+.section-title { font-size: 0.82rem; font-weight: 700; color: var(--text); margin: 14px 0 10px; }
+
+/* ===== CHART ===== */
+.chart-container { position: relative; height: 220px; margin: 8px 0; }
+
+/* ===== SETTINGS ROW ===== */
+.settings-row { display: flex; align-items: center; justify-content: space-between; padding: 14px 0; border-bottom: 1px solid var(--border); }
+.settings-row:last-child { border-bottom: none; }
+.settings-label { font-weight: 600; font-size: 0.88rem; }
+.settings-desc { font-size: 0.75rem; color: var(--text-muted); margin-top: 2px; }
+
+/* ===== PRINT ===== */
+@media print {
+  .bottom-nav, .header, .btn, .modal-overlay, .search-bar, .tab-bar { display: none !important; }
+  .page { display: block !important; padding: 0; }
+  .page:not(.print-target) { display: none !important; }
+  .card { box-shadow: none; border: 1px solid #ccc; break-inside: avoid; }
+  body { padding-bottom: 0; background: white; }
+  .print-header { display: block !important; text-align: center; margin-bottom: 20px; padding: 16px; border-bottom: 3px solid var(--primary); }
+  .print-header h1 { font-size: 1.4rem; color: var(--primary); }
+  .print-header p { color: var(--text-muted); }
+}
+.print-header { display: none; }
+
+@media (min-width: 500px) { .stats-grid { grid-template-columns: repeat(4, 1fr); } }
+
+/* ===== FLYER GRID ===== */
+.flyer-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+.flyer-card { border-radius: var(--radius); overflow: hidden; background: var(--card); box-shadow: var(--shadow); border: 1px solid var(--border); cursor: pointer; }
+.flyer-card img { width: 100%; height: 140px; object-fit: cover; display: block; }
+.flyer-card .flyer-info { padding: 10px; }
+.flyer-card .flyer-title { font-weight: 700; font-size: 0.82rem; }
+.flyer-card .flyer-date { font-size: 0.7rem; color: var(--text-muted); margin-top: 2px; }
+
+/* ===== CONTACT CARD ===== */
+.contact-card { display: flex; gap: 12px; padding: 12px; align-items: center; }
+.contact-avatar { width: 42px; height: 42px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.82rem; flex-shrink: 0; color: white; }
+.contact-avatar.yl { background: var(--accent); color: var(--primary-dark); }
+.contact-avatar.pastor { background: var(--primary); }
+.contact-avatar.other { background: var(--text-muted); }
+.contact-actions { display: flex; gap: 8px; margin-left: auto; flex-shrink: 0; }
+.contact-actions a { width: 34px; height: 34px; border-radius: 50%; display: flex; align-items: center; justify-content: center; text-decoration: none; font-size: 1rem; }
+.contact-actions a.phone-btn { background: #d4edda; color: #155724; }
+.contact-actions a.email-btn { background: #e8f0fe; color: var(--primary); }
+
+/* ===== NOTES ===== */
+.note-card { cursor: pointer; }
+.note-card .note-preview { font-size: 0.78rem; color: var(--text-muted); margin-top: 4px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.note-tags { display: flex; gap: 4px; flex-wrap: wrap; margin-top: 6px; }
+.note-tag { font-size: 0.6rem; padding: 2px 8px; border-radius: 10px; background: #e8daef; color: #6c3483; font-weight: 600; }
+
+/* ===== MERCH ===== */
+.size-grid { display: flex; gap: 4px; flex-wrap: wrap; margin-top: 6px; }
+.size-pill { font-size: 0.6rem; font-weight: 700; padding: 3px 8px; border-radius: 6px; background: var(--bg); color: var(--text-muted); }
+.size-pill.in-stock { background: #d4edda; color: #155724; }
+.size-pill.low { background: #fef3cd; color: #856404; }
+.size-pill.out { background: #f8d7da; color: #721c24; }
+.low-stock-alert { background: #fff3cd; border: 1px solid #ffc107; border-radius: var(--radius); padding: 10px 14px; margin-bottom: 12px; font-size: 0.82rem; display: flex; align-items: center; gap: 8px; }
+.profit-bar { height: 6px; background: var(--bg); border-radius: 3px; margin-top: 4px; overflow: hidden; }
+.profit-bar-fill { height: 100%; border-radius: 3px; background: var(--success); }
+</style>
+</head>
+<body>
+
+<!-- Header -->
+<div class="header">
+  <div class="header-top">
+    <div>
+      <h1>Section 6 Youth</h1>
+      <p>Mississippi District UPCI</p>
+    </div>
+    <span class="header-badge">Director</span>
+  </div>
+</div>
+
+<!-- ==================== DASHBOARD ==================== -->
+<div class="page active" id="page-dashboard">
+  <div class="stats-grid" id="dashStats"></div>
+
+  <!-- Reminders -->
+  <div id="dashReminders"></div>
+
+  <!-- Attendance Chart -->
+  <div class="card">
+    <div class="card-header">
+      <span class="card-title">Attendance Trends</span>
+      <select class="form-select" style="width:auto;padding:4px 8px;font-size:0.7rem;" id="chartYear" onchange="renderDashCharts()"></select>
+    </div>
+    <div class="chart-container"><canvas id="attendanceChart"></canvas></div>
+  </div>
+
+  <!-- Offering Chart -->
+  <div class="card">
+    <div class="card-header">
+      <span class="card-title">Offering Totals</span>
+    </div>
+    <div class="chart-container"><canvas id="offeringChart"></canvas></div>
+  </div>
+
+  <!-- Move the Mission Summary -->
+  <div id="dashMission"></div>
+
+  <!-- Recent Rallies -->
+  <div class="card">
+    <div class="card-header">
+      <span class="card-title">Recent Rallies</span>
+      <button class="btn btn-sm btn-primary" onclick="showPage('rallies')">View All</button>
+    </div>
+    <div id="dashRecentRallies"></div>
+  </div>
+
+  <!-- Upcoming Events -->
+  <div class="card">
+    <div class="card-header">
+      <span class="card-title">Upcoming Events</span>
+      <button class="btn btn-sm btn-primary" onclick="showPage('events')">View All</button>
+    </div>
+    <div id="dashUpcomingEvents"></div>
+  </div>
+
+  <!-- Budget Overview -->
+  <div class="card">
+    <div class="card-header">
+      <span class="card-title">Budget Overview</span>
+      <button class="btn btn-sm btn-primary" onclick="showPage('budget')">Details</button>
+    </div>
+    <div id="dashBudgetOverview"></div>
+  </div>
+</div>
+
+<!-- ==================== RALLIES ==================== -->
+<div class="page" id="page-rallies">
+  <div class="tab-bar">
+    <button class="tab-btn active" onclick="setRallyTab('list',this)">Rally Log</button>
+    <button class="tab-btn" onclick="setRallyTab('rotation',this)">Rotation</button>
+  </div>
+
+  <div id="rallyTabList">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+      <h2 style="font-size:1.05rem;font-weight:700;">Youth Rallies</h2>
+      <button class="btn btn-primary btn-sm" onclick="openModal('rallyModal')">+ Add Rally</button>
+    </div>
+    <div class="search-bar">
+      <input class="form-input" type="text" placeholder="Search rallies..." id="rallySearch" oninput="renderRallies()">
+    </div>
+    <div id="rallyList"></div>
+  </div>
+
+  <div id="rallyTabRotation" style="display:none">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+      <h2 style="font-size:1.05rem;font-weight:700;">Rally Rotation</h2>
+      <button class="btn btn-primary btn-sm" onclick="openModal('rotationModal')">Edit Order</button>
+    </div>
+    <div id="rotationList"></div>
+  </div>
+</div>
+
+<!-- ==================== CHURCHES ==================== -->
+<div class="page" id="page-churches">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+    <h2 style="font-size:1.05rem;font-weight:700;">Church Directory</h2>
+    <button class="btn btn-primary btn-sm" onclick="openModal('churchModal')">+ Add Church</button>
+  </div>
+  <div class="search-bar">
+    <input class="form-input" type="text" placeholder="Search churches..." id="churchSearch" oninput="renderChurches()">
+  </div>
+  <div id="churchList"></div>
+</div>
+
+<!-- ==================== EVENTS ==================== -->
+<div class="page" id="page-events">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+    <h2 style="font-size:1.05rem;font-weight:700;">Events</h2>
+    <button class="btn btn-primary btn-sm" onclick="openModal('eventModal')">+ Add Event</button>
+  </div>
+  <div id="eventList"></div>
+</div>
+
+<!-- ==================== BUDGET ==================== -->
+<div class="page" id="page-budget">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+    <h2 style="font-size:1.05rem;font-weight:700;">Budget Tracker</h2>
+    <button class="btn btn-primary btn-sm" onclick="openModal('budgetModal')">+ Add Entry</button>
+  </div>
+  <div class="stats-grid" id="budgetStats"></div>
+  <div class="tab-bar">
+    <button class="tab-btn active" onclick="setBudgetTab('all',this)">All</button>
+    <button class="tab-btn" onclick="setBudgetTab('income',this)">Income</button>
+    <button class="tab-btn" onclick="setBudgetTab('expense',this)">Expenses</button>
+  </div>
+  <div id="budgetList"></div>
+</div>
+
+<!-- ==================== GOALS ==================== -->
+<div class="page" id="page-goals">
+  <div class="tab-bar">
+    <button class="tab-btn active" onclick="setGoalTab('mission',this)">Move the Mission</button>
+    <button class="tab-btn" onclick="setGoalTab('annual',this)">Annual Goals</button>
+  </div>
+
+  <div id="goalTabMission">
+    <div id="missionContent"></div>
+  </div>
+
+  <div id="goalTabAnnual" style="display:none">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+      <h2 style="font-size:1.05rem;font-weight:700;">Annual Goals</h2>
+      <button class="btn btn-primary btn-sm" onclick="openModal('goalModal')">+ Set Goal</button>
+    </div>
+    <div id="goalList"></div>
+  </div>
+</div>
+
+<!-- ==================== REPORTS ==================== -->
+<div class="page" id="page-reports">
+  <h2 style="font-size:1.05rem;font-weight:700;margin-bottom:12px;">Reports</h2>
+  <div class="card">
+    <div class="card-title" style="margin-bottom:10px;">Generate Report</div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">From</label>
+        <input class="form-input" type="date" id="reportFrom">
+      </div>
+      <div class="form-group">
+        <label class="form-label">To</label>
+        <input class="form-input" type="date" id="reportTo">
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Include</label>
+      <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:4px;">
+        <label style="font-size:0.82rem;display:flex;align-items:center;gap:4px;"><input type="checkbox" id="rptRallies" checked> Rallies</label>
+        <label style="font-size:0.82rem;display:flex;align-items:center;gap:4px;"><input type="checkbox" id="rptEvents" checked> Events</label>
+        <label style="font-size:0.82rem;display:flex;align-items:center;gap:4px;"><input type="checkbox" id="rptBudget" checked> Budget</label>
+        <label style="font-size:0.82rem;display:flex;align-items:center;gap:4px;"><input type="checkbox" id="rptGoals" checked> Goals</label>
+      </div>
+    </div>
+    <button class="btn btn-primary btn-full" onclick="generateReport()">Generate & Print Report</button>
+  </div>
+
+  <div class="card" style="margin-top:12px;">
+    <div class="card-title" style="margin-bottom:10px;">Year-over-Year Comparison</div>
+    <div class="chart-container" style="height:250px;"><canvas id="yoyChart"></canvas></div>
+  </div>
+</div>
+
+<!-- ==================== SETTINGS ==================== -->
+<div class="page" id="page-settings">
+  <h2 style="font-size:1.05rem;font-weight:700;margin-bottom:12px;">Settings</h2>
+  <div class="card">
+    <div class="settings-row">
+      <div>
+        <div class="settings-label">Export Backup</div>
+        <div class="settings-desc">Download all your data as a JSON file</div>
+      </div>
+      <button class="btn btn-sm btn-primary" onclick="exportData()">Export</button>
+    </div>
+    <div class="settings-row">
+      <div>
+        <div class="settings-label">Import Backup</div>
+        <div class="settings-desc">Restore data from a backup file</div>
+      </div>
+      <button class="btn btn-sm btn-outline" onclick="document.getElementById('importFile').click()">Import</button>
+      <input type="file" id="importFile" accept=".json" style="display:none" onchange="importData(this.files[0])">
+    </div>
+    <div class="settings-row">
+      <div>
+        <div class="settings-label">Enable Reminders</div>
+        <div class="settings-desc">Get notified about upcoming events</div>
+      </div>
+      <button class="btn btn-sm btn-accent" onclick="requestNotifications()">Enable</button>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== PRINT REPORT PAGE ==================== -->
+<div class="page print-target" id="page-print">
+  <div class="print-header">
+    <h1>Section 6 Youth &mdash; Mississippi District UPCI</h1>
+    <p id="printDateRange"></p>
+  </div>
+  <div id="printContent"></div>
+</div>
+
+<!-- ==================== BOTTOM NAV ==================== -->
+<nav class="bottom-nav">
+  <button class="nav-item active" onclick="showPage('dashboard')" data-page="dashboard">
+    <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>Home
+  </button>
+  <button class="nav-item" onclick="showPage('rallies')" data-page="rallies">
+    <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>Rallies
+  </button>
+  <button class="nav-item" onclick="showPage('churches')" data-page="churches">
+    <svg viewBox="0 0 24 24"><path d="M3 21h18M9 21V9l3-6 3 6v12M9 9h6M9 13h6M9 17h6"/></svg>Churches
+  </button>
+  <button class="nav-item" onclick="showPage('budget')" data-page="budget">
+    <svg viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>Budget
+  </button>
+  <button class="nav-item" onclick="showPage('goals')" data-page="goals">
+    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>Goals
+  </button>
+  <button class="nav-item" onclick="showPage('more-menu')" data-page="more-menu">
+    <svg viewBox="0 0 24 24"><circle cx="12" cy="5" r="1.5" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.5" fill="currentColor" stroke="none"/><circle cx="12" cy="19" r="1.5" fill="currentColor" stroke="none"/></svg>More
+  </button>
+</nav>
+
+<!-- ==================== FLYERS ==================== -->
+<div class="page" id="page-flyers">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+    <h2 style="font-size:1.05rem;font-weight:700;">Flyers & Graphics</h2>
+    <button class="btn btn-primary btn-sm" onclick="openModal('flyerModal')">+ Add Flyer</button>
+  </div>
+  <div id="flyerList"></div>
+</div>
+
+<!-- ==================== CONTACTS ==================== -->
+<div class="page" id="page-contacts">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+    <h2 style="font-size:1.05rem;font-weight:700;">Youth Leaders & Contacts</h2>
+    <button class="btn btn-primary btn-sm" onclick="openModal('contactModal')">+ Add Contact</button>
+  </div>
+  <div class="search-bar">
+    <input class="form-input" type="text" placeholder="Search contacts..." id="contactSearch" oninput="renderContacts()">
+  </div>
+  <div id="contactList"></div>
+</div>
+
+<!-- ==================== NOTES ==================== -->
+<div class="page" id="page-notes">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+    <h2 style="font-size:1.05rem;font-weight:700;">Notes & Minutes</h2>
+    <button class="btn btn-primary btn-sm" onclick="openNoteModal()">+ New Note</button>
+  </div>
+  <div class="search-bar">
+    <input class="form-input" type="text" placeholder="Search notes..." id="noteSearch" oninput="renderNotes()">
+  </div>
+  <div class="tab-bar" style="margin-bottom:12px;">
+    <button class="tab-btn active" onclick="setNoteFilter('all',this)">All</button>
+    <button class="tab-btn" onclick="setNoteFilter('Business Meeting',this)">Meetings</button>
+    <button class="tab-btn" onclick="setNoteFilter('Planning',this)">Planning</button>
+    <button class="tab-btn" onclick="setNoteFilter('Action Items',this)">Action Items</button>
+  </div>
+  <div id="noteList"></div>
+</div>
+
+<!-- ==================== MERCH ==================== -->
+<div class="page" id="page-merch">
+  <div class="tab-bar">
+    <button class="tab-btn active" onclick="setMerchTab('inventory',this)">Inventory</button>
+    <button class="tab-btn" onclick="setMerchTab('sales',this)">Sales Log</button>
+    <button class="tab-btn" onclick="setMerchTab('summary',this)">Summary</button>
+  </div>
+
+  <div id="merchTabInventory">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+      <h2 style="font-size:1.05rem;font-weight:700;">Merch Inventory</h2>
+      <button class="btn btn-primary btn-sm" onclick="openModal('merchModal')">+ Add Item</button>
+    </div>
+    <div id="merchLowStock"></div>
+    <div id="merchList"></div>
+  </div>
+
+  <div id="merchTabSales" style="display:none">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+      <h2 style="font-size:1.05rem;font-weight:700;">Sales Log</h2>
+      <button class="btn btn-primary btn-sm" onclick="openModal('saleModal')">+ Log Sale</button>
+    </div>
+    <div id="salesList"></div>
+  </div>
+
+  <div id="merchTabSummary" style="display:none">
+    <h2 style="font-size:1.05rem;font-weight:700;margin-bottom:12px;">Merch Summary</h2>
+    <div class="stats-grid" id="merchStats"></div>
+    <div class="card">
+      <div class="card-title" style="margin-bottom:8px;">Profit by Item</div>
+      <div id="merchProfitList"></div>
+    </div>
+  </div>
+</div>
+
+<!-- More Menu Page -->
+<div class="page" id="page-more-menu">
+  <h2 style="font-size:1.05rem;font-weight:700;margin-bottom:12px;">More</h2>
+  <div class="card" style="cursor:pointer" onclick="showPage('events')">
+    <div style="display:flex;align-items:center;gap:12px;">
+      <div class="list-icon gold">&#128197;</div>
+      <div><div class="list-title">Events</div><div class="list-subtitle">Manage upcoming events</div></div>
+    </div>
+  </div>
+  <div class="card" style="cursor:pointer" onclick="showPage('contacts')">
+    <div style="display:flex;align-items:center;gap:12px;">
+      <div class="list-icon green">&#128222;</div>
+      <div><div class="list-title">Contacts</div><div class="list-subtitle">Youth leaders & quick-access directory</div></div>
+    </div>
+  </div>
+  <div class="card" style="cursor:pointer" onclick="showPage('merch')">
+    <div style="display:flex;align-items:center;gap:12px;">
+      <div class="list-icon green">&#128085;</div>
+      <div><div class="list-title">Merch Tracker</div><div class="list-subtitle">Inventory, sales & profit tracking</div></div>
+    </div>
+  </div>
+  <div class="card" style="cursor:pointer" onclick="showPage('team')">
+    <div style="display:flex;align-items:center;gap:12px;">
+      <div class="list-icon purple">&#128101;</div>
+      <div><div class="list-title">Team</div><div class="list-subtitle">Section 6 team members & roles</div></div>
+    </div>
+  </div>
+  <div class="card" style="cursor:pointer" onclick="showPage('docs')">
+    <div style="display:flex;align-items:center;gap:12px;">
+      <div class="list-icon blue">&#128194;</div>
+      <div><div class="list-title">Document Vault</div><div class="list-subtitle">Bylaws, guidelines & important files</div></div>
+    </div>
+  </div>
+  <div class="card" style="cursor:pointer" onclick="showPage('flyers')">
+    <div style="display:flex;align-items:center;gap:12px;">
+      <div class="list-icon gold">&#128444;</div>
+      <div><div class="list-title">Flyers & Graphics</div><div class="list-subtitle">Visual archive of promotional materials</div></div>
+    </div>
+  </div>
+  <div class="card" style="cursor:pointer" onclick="showPage('notes')">
+    <div style="display:flex;align-items:center;gap:12px;">
+      <div class="list-icon blue">&#128221;</div>
+      <div><div class="list-title">Notes & Minutes</div><div class="list-subtitle">Meeting notes, planning & action items</div></div>
+    </div>
+  </div>
+  <div class="card" style="cursor:pointer" onclick="showPage('reports')">
+    <div style="display:flex;align-items:center;gap:12px;">
+      <div class="list-icon blue">&#128202;</div>
+      <div><div class="list-title">Reports</div><div class="list-subtitle">Charts, comparisons & printable reports</div></div>
+    </div>
+  </div>
+  <div class="card" style="cursor:pointer" onclick="showPage('settings')">
+    <div style="display:flex;align-items:center;gap:12px;">
+      <div class="list-icon purple">&#9881;</div>
+      <div><div class="list-title">Settings</div><div class="list-subtitle">Backup, import & notifications</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- Document Vault Page -->
+<div class="page" id="page-docs">
+  <div class="card-header" style="margin-bottom:12px;">
+    <h2 style="font-size:1.05rem;font-weight:700;">Document Vault</h2>
+    <button class="btn btn-primary btn-sm" onclick="openModal('docModal')">+ Add Document</button>
+  </div>
+  <div style="margin-bottom:10px;">
+    <select class="form-select" id="docCategoryFilter" onchange="renderDocs()" style="font-size:0.8rem;">
+      <option value="all">All Categories</option>
+      <option value="Bylaws">Bylaws</option>
+      <option value="Guidelines">Guidelines</option>
+      <option value="Treasurer Reports">Treasurer Reports</option>
+      <option value="Meeting Minutes">Meeting Minutes</option>
+      <option value="Forms">Forms</option>
+      <option value="Other">Other</option>
+    </select>
+  </div>
+  <div id="docsList"></div>
+</div>
+
+<!-- Team Page -->
+<div class="page" id="page-team">
+  <div class="card-header" style="margin-bottom:12px;">
+    <h2 style="font-size:1.05rem;font-weight:700;">Section 6 Team</h2>
+    <button class="btn btn-primary btn-sm" onclick="openModal('teamModal')">+ Add Member</button>
+  </div>
+  <div id="teamList"></div>
+</div>
+
+<!-- ==================== MODALS ==================== -->
+
+<!-- Rally Modal -->
+<div class="modal-overlay" id="rallyModal">
+  <div class="modal">
+    <div class="modal-title"><span id="rallyModalTitle">Add Youth Rally</span><button class="modal-close" onclick="closeModal('rallyModal')">&times;</button></div>
+    <form onsubmit="saveRally(event)">
+      <input type="hidden" id="rallyEditId" value="">
+      <div class="form-group"><label class="form-label">Rally Name</label><input class="form-input" id="rallyName" required placeholder="e.g. February Section Rally"></div>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">Date</label><input class="form-input" type="date" id="rallyDate" required></div>
+        <div class="form-group"><label class="form-label">Host Church</label>
+          <select class="form-select" id="rallyChurch"><option value="">Select church...</option></select>
+        </div>
+      </div>
+      <div class="form-group"><label class="form-label">Location (if different)</label><input class="form-input" id="rallyLocation" placeholder="Override location"></div>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">Attendance</label><input class="form-input" type="number" id="rallyAttendance" min="0" placeholder="0"></div>
+        <div class="form-group"><label class="form-label">Offering ($)</label><input class="form-input" type="number" step="0.01" id="rallyOffering" min="0" placeholder="0.00"></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">Preacher</label><input class="form-input" id="rallyPreacher" placeholder="Who preached?"></div>
+        <div class="form-group"><label class="form-label">Sermon Topic</label><input class="form-input" id="rallySermon" placeholder="What did they preach?"></div>
+      </div>
+      <div class="form-group"><label class="form-label">Notes</label><textarea class="form-textarea" id="rallyNotes" placeholder="Altar results, special moments, etc."></textarea></div>
+      <div class="form-group"><label class="form-label">Photos</label><input type="file" accept="image/*" multiple id="rallyPhotos" class="form-input" style="padding:8px;"></div>
+      <div id="rallyPhotoPreview" class="photo-grid"></div>
+      <div class="btn-row">
+        <button type="button" class="btn btn-outline" onclick="closeModal('rallyModal')">Cancel</button>
+        <button type="submit" class="btn btn-primary">Save Rally</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Church Modal -->
+<div class="modal-overlay" id="churchModal">
+  <div class="modal">
+    <div class="modal-title"><span id="churchModalTitle">Add Church</span><button class="modal-close" onclick="closeModal('churchModal')">&times;</button></div>
+    <form onsubmit="saveChurch(event)">
+      <input type="hidden" id="churchEditId" value="">
+      <div class="form-group"><label class="form-label">Church Name</label><input class="form-input" id="churchName" required placeholder="e.g. First Pentecostal Church"></div>
+      <div class="form-group"><label class="form-label">Pastor Name</label><input class="form-input" id="churchPastor" placeholder="Pastor name"></div>
+      <div class="form-group"><label class="form-label">Address</label><input class="form-input" id="churchAddress" placeholder="Street, City, State ZIP"></div>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">Phone</label><input class="form-input" id="churchPhone" placeholder="(601) 555-0123"></div>
+        <div class="form-group"><label class="form-label">Email</label><input class="form-input" id="churchEmail" placeholder="pastor@church.com"></div>
+      </div>
+      <div class="form-group"><label class="form-label">Youth Leader</label><input class="form-input" id="churchYouthLeader" placeholder="Youth leader name"></div>
+      <div class="form-group"><label class="form-label">Notes</label><textarea class="form-textarea" id="churchNotes" placeholder="Any additional info..."></textarea></div>
+      <div class="btn-row" style="padding-bottom:10px;">
+        <button type="button" class="btn btn-outline" onclick="closeModal('churchModal')">Cancel</button>
+        <button type="submit" class="btn btn-primary" style="padding:12px 16px;">Save Church</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Event Modal -->
+<div class="modal-overlay" id="eventModal">
+  <div class="modal">
+    <div class="modal-title"><span id="eventModalTitle">Add Event</span><button class="modal-close" onclick="closeModal('eventModal')">&times;</button></div>
+    <form onsubmit="saveEvent(event)">
+      <input type="hidden" id="eventEditId" value="">
+      <div class="form-group"><label class="form-label">Event Name</label><input class="form-input" id="eventName" required placeholder="e.g. Youth Camp, Conference"></div>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">Start Date</label><input class="form-input" type="date" id="eventDate" required></div>
+        <div class="form-group"><label class="form-label">End Date</label><input class="form-input" type="date" id="eventEndDate"></div>
+      </div>
+      <div class="form-group"><label class="form-label">Location</label><input class="form-input" id="eventLocation" placeholder="Where is it?"></div>
+      <div class="form-group"><label class="form-label">Description</label><textarea class="form-textarea" id="eventDescription" placeholder="Details..."></textarea></div>
+      <div class="form-group"><label class="form-label">Reminder (days before)</label>
+        <select class="form-select" id="eventReminder">
+          <option value="0">No reminder</option>
+          <option value="1">1 day before</option>
+          <option value="3">3 days before</option>
+          <option value="7" selected>1 week before</option>
+          <option value="14">2 weeks before</option>
+          <option value="30">1 month before</option>
+        </select>
+      </div>
+      <div class="btn-row">
+        <button type="button" class="btn btn-outline" onclick="closeModal('eventModal')">Cancel</button>
+        <button type="submit" class="btn btn-primary">Save Event</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Budget Modal -->
+<div class="modal-overlay" id="budgetModal">
+  <div class="modal">
+    <div class="modal-title"><span id="budgetModalTitle">Add Budget Entry</span><button class="modal-close" onclick="closeModal('budgetModal')">&times;</button></div>
+    <form onsubmit="saveBudgetEntry(event)">
+      <input type="hidden" id="budgetEditId" value="">
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">Type</label>
+          <select class="form-select" id="budgetType"><option value="income">Income</option><option value="expense">Expense</option></select>
+        </div>
+        <div class="form-group"><label class="form-label">Category</label>
+          <select class="form-select" id="budgetCategory">
+            <option value="Rally Offering">Rally Offering</option><option value="Fundraiser">Fundraiser</option>
+            <option value="Donation">Donation</option><option value="District Funds">District Funds</option>
+            <option value="Move the Mission">Move the Mission</option>
+            <option value="Venue Rental">Venue Rental</option><option value="Food & Supplies">Food & Supplies</option>
+            <option value="Speaker Honorarium">Speaker Honorarium</option><option value="Travel">Travel</option>
+            <option value="Printing/Materials">Printing/Materials</option><option value="Youth Camp">Youth Camp</option>
+            <option value="Other">Other</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group"><label class="form-label">Description</label><input class="form-input" id="budgetDesc" required placeholder="What is this for?"></div>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">Amount ($)</label><input class="form-input" type="number" step="0.01" id="budgetAmount" min="0" required placeholder="0.00"></div>
+        <div class="form-group"><label class="form-label">Date</label><input class="form-input" type="date" id="budgetDate" required></div>
+      </div>
+      <div class="btn-row">
+        <button type="button" class="btn btn-outline" onclick="closeModal('budgetModal')">Cancel</button>
+        <button type="submit" class="btn btn-primary">Save Entry</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Goal Modal -->
+<div class="modal-overlay" id="goalModal">
+  <div class="modal">
+    <div class="modal-title"><span>Set Annual Goal</span><button class="modal-close" onclick="closeModal('goalModal')">&times;</button></div>
+    <form onsubmit="saveGoal(event)">
+      <input type="hidden" id="goalEditId" value="">
+      <div class="form-group"><label class="form-label">Goal Name</label><input class="form-input" id="goalName" required placeholder="e.g. Total Attendance"></div>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">Target</label><input class="form-input" type="number" id="goalTarget" required min="1" placeholder="500"></div>
+        <div class="form-group"><label class="form-label">Type</label>
+          <select class="form-select" id="goalType">
+            <option value="attendance">Attendance</option><option value="offering">Offering ($)</option>
+            <option value="rallies">Number of Rallies</option><option value="custom">Custom</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group"><label class="form-label">Year</label><input class="form-input" type="number" id="goalYear" value="2026" min="2020" max="2040"></div>
+      <div class="btn-row">
+        <button type="button" class="btn btn-outline" onclick="closeModal('goalModal')">Cancel</button>
+        <button type="submit" class="btn btn-primary">Save Goal</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Mission Contribution Modal -->
+<div class="modal-overlay" id="missionModal">
+  <div class="modal">
+    <div class="modal-title"><span id="missionModalTitle">Add Contribution</span><button class="modal-close" onclick="closeModal('missionModal')">&times;</button></div>
+    <form onsubmit="saveMissionEntry(event)">
+      <input type="hidden" id="missionEditId" value="">
+      <div class="form-group"><label class="form-label">Church / Source</label>
+        <select class="form-select" id="missionChurch"><option value="">Select church...</option><option value="Individual">Individual</option><option value="Other">Other</option></select>
+      </div>
+      <div class="form-group"><label class="form-label">Description</label><input class="form-input" id="missionDesc" placeholder="e.g. Bake sale, car wash, offering"></div>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">Amount ($)</label><input class="form-input" type="number" step="0.01" id="missionAmount" min="0" required placeholder="0.00"></div>
+        <div class="form-group"><label class="form-label">Date</label><input class="form-input" type="date" id="missionDate" required></div>
+      </div>
+      <div class="btn-row">
+        <button type="button" class="btn btn-outline" onclick="closeModal('missionModal')">Cancel</button>
+        <button type="submit" class="btn btn-primary">Save</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Mission Settings Modal -->
+<div class="modal-overlay" id="missionSettingsModal">
+  <div class="modal">
+    <div class="modal-title"><span>Move the Mission Settings</span><button class="modal-close" onclick="closeModal('missionSettingsModal')">&times;</button></div>
+    <form onsubmit="saveMissionSettings(event)">
+      <div class="form-group"><label class="form-label">Campaign Year</label><input class="form-input" type="number" id="missionYear" value="2026" min="2020" max="2040"></div>
+      <div class="form-group"><label class="form-label">Section Goal ($)</label><input class="form-input" type="number" step="0.01" id="missionGoalAmount" min="0" required placeholder="5000.00"></div>
+      <div class="form-group"><label class="form-label">Campaign Name</label><input class="form-input" id="missionCampaignName" value="Move the Mission" placeholder="Campaign name"></div>
+      <div class="btn-row">
+        <button type="button" class="btn btn-outline" onclick="closeModal('missionSettingsModal')">Cancel</button>
+        <button type="submit" class="btn btn-primary">Save Settings</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Rotation Modal -->
+<div class="modal-overlay" id="rotationModal">
+  <div class="modal">
+    <div class="modal-title"><span>Edit Rotation Order</span><button class="modal-close" onclick="closeModal('rotationModal')">&times;</button></div>
+    <p style="font-size:0.82rem;color:var(--text-muted);margin-bottom:12px;">Drag to reorder or check churches to include in the rotation.</p>
+    <div id="rotationEditor"></div>
+    <div class="form-group" style="margin-top:12px;">
+      <label class="form-label">Currently on rotation #</label>
+      <input class="form-input" type="number" id="rotationCurrent" min="0" value="0">
+    </div>
+    <div class="btn-row">
+      <button type="button" class="btn btn-outline" onclick="closeModal('rotationModal')">Cancel</button>
+      <button type="button" class="btn btn-primary" onclick="saveRotation()">Save</button>
+    </div>
+  </div>
+</div>
+
+<!-- Merch Item Modal -->
+<div class="modal-overlay" id="merchModal">
+  <div class="modal">
+    <div class="modal-title"><span id="merchModalTitle">Add Merch Item</span><button class="modal-close" onclick="closeModal('merchModal')">&times;</button></div>
+    <form onsubmit="saveMerchItem(event)">
+      <input type="hidden" id="merchEditId" value="">
+      <div class="form-group"><label class="form-label">Item Name</label><input class="form-input" id="merchName" required placeholder="e.g. Section 6 Youth T-Shirt"></div>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">Category</label>
+          <select class="form-select" id="merchCategory">
+            <option value="Shirts">Shirts</option>
+            <option value="Hoodies">Hoodies</option>
+            <option value="Hats">Hats</option>
+            <option value="Stickers">Stickers</option>
+            <option value="Wristbands">Wristbands</option>
+            <option value="Cups/Tumblers">Cups/Tumblers</option>
+            <option value="Books">Books</option>
+            <option value="Other">Other</option>
+          </select>
+        </div>
+        <div class="form-group"><label class="form-label">Has Sizes?</label>
+          <select class="form-select" id="merchHasSizes" onchange="toggleSizeFields()">
+            <option value="no">No</option>
+            <option value="yes">Yes</option>
+          </select>
+        </div>
+      </div>
+      <div id="merchSizeFields" style="display:none;">
+        <div class="form-label" style="margin-bottom:6px;">Quantity by Size</div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:12px;">
+          <div class="form-group" style="margin-bottom:0;"><label class="form-label" style="font-size:0.65rem;">XS</label><input class="form-input" type="number" id="merchXS" min="0" value="0" style="padding:6px 8px;"></div>
+          <div class="form-group" style="margin-bottom:0;"><label class="form-label" style="font-size:0.65rem;">S</label><input class="form-input" type="number" id="merchS" min="0" value="0" style="padding:6px 8px;"></div>
+          <div class="form-group" style="margin-bottom:0;"><label class="form-label" style="font-size:0.65rem;">M</label><input class="form-input" type="number" id="merchM" min="0" value="0" style="padding:6px 8px;"></div>
+          <div class="form-group" style="margin-bottom:0;"><label class="form-label" style="font-size:0.65rem;">L</label><input class="form-input" type="number" id="merchL" min="0" value="0" style="padding:6px 8px;"></div>
+          <div class="form-group" style="margin-bottom:0;"><label class="form-label" style="font-size:0.65rem;">XL</label><input class="form-input" type="number" id="merchXL" min="0" value="0" style="padding:6px 8px;"></div>
+          <div class="form-group" style="margin-bottom:0;"><label class="form-label" style="font-size:0.65rem;">2XL</label><input class="form-input" type="number" id="merch2XL" min="0" value="0" style="padding:6px 8px;"></div>
+          <div class="form-group" style="margin-bottom:0;"><label class="form-label" style="font-size:0.65rem;">3XL</label><input class="form-input" type="number" id="merch3XL" min="0" value="0" style="padding:6px 8px;"></div>
+        </div>
+      </div>
+      <div id="merchNoSizeQty">
+        <div class="form-group"><label class="form-label">Quantity on Hand</label><input class="form-input" type="number" id="merchQty" min="0" value="0"></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">Cost Price ($)</label><input class="form-input" type="number" step="0.01" id="merchCost" min="0" placeholder="What you paid per unit"></div>
+        <div class="form-group"><label class="form-label">Sell Price ($)</label><input class="form-input" type="number" step="0.01" id="merchPrice" min="0" placeholder="What you sell it for"></div>
+      </div>
+      <div class="form-group"><label class="form-label">Low Stock Alert (qty)</label><input class="form-input" type="number" id="merchLowAlert" min="0" value="5" placeholder="Alert when below this"></div>
+      <div class="form-group"><label class="form-label">Photo</label><input type="file" accept="image/*" id="merchPhoto" class="form-input" style="padding:8px;"></div>
+      <div id="merchPhotoPreview" style="text-align:center;margin-bottom:8px;"></div>
+      <div class="form-group"><label class="form-label">Notes</label><textarea class="form-textarea" id="merchNotes" placeholder="Color, design details, vendor, etc."></textarea></div>
+      <div class="btn-row">
+        <button type="button" class="btn btn-outline" onclick="closeModal('merchModal')">Cancel</button>
+        <button type="submit" class="btn btn-primary">Save Item</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Sale Modal -->
+<div class="modal-overlay" id="saleModal">
+  <div class="modal">
+    <div class="modal-title"><span>Log Sale</span><button class="modal-close" onclick="closeModal('saleModal')">&times;</button></div>
+    <form onsubmit="saveSale(event)">
+      <div class="form-group"><label class="form-label">Item</label>
+        <select class="form-select" id="saleItem" required onchange="updateSaleSizes()"><option value="">Select item...</option></select>
+      </div>
+      <div id="saleSizeField" style="display:none;">
+        <div class="form-group"><label class="form-label">Size</label>
+          <select class="form-select" id="saleSize">
+            <option value="XS">XS</option><option value="S">S</option><option value="M">M</option>
+            <option value="L">L</option><option value="XL">XL</option><option value="2XL">2XL</option><option value="3XL">3XL</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">Quantity</label><input class="form-input" type="number" id="saleQty" min="1" value="1" required></div>
+        <div class="form-group"><label class="form-label">Sale Price ($)</label><input class="form-input" type="number" step="0.01" id="salePrice" min="0" required placeholder="0.00"></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">Date</label><input class="form-input" type="date" id="saleDate" required></div>
+        <div class="form-group"><label class="form-label">Sold At</label><input class="form-input" id="saleLocation" placeholder="e.g. March Rally"></div>
+      </div>
+      <div id="saleStockInfo" style="font-size:0.75rem;color:var(--text-muted);margin-bottom:8px;"></div>
+      <div class="btn-row">
+        <button type="button" class="btn btn-outline" onclick="closeModal('saleModal')">Cancel</button>
+        <button type="submit" class="btn btn-primary">Log Sale</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Stock Adjustment Modal -->
+<div class="modal-overlay" id="stockModal">
+  <div class="modal">
+    <div class="modal-title"><span>Adjust Stock</span><button class="modal-close" onclick="closeModal('stockModal')">&times;</button></div>
+    <form onsubmit="saveStockAdjust(event)">
+      <input type="hidden" id="stockItemId" value="">
+      <div class="form-group"><label class="form-label">Adjustment Type</label>
+        <select class="form-select" id="stockType">
+          <option value="add">Add Stock (received new inventory)</option>
+          <option value="remove">Remove Stock (damaged, lost, giveaway)</option>
+        </select>
+      </div>
+      <div id="stockSizeField" style="display:none;">
+        <div class="form-group"><label class="form-label">Size</label>
+          <select class="form-select" id="stockSize">
+            <option value="XS">XS</option><option value="S">S</option><option value="M">M</option>
+            <option value="L">L</option><option value="XL">XL</option><option value="2XL">2XL</option><option value="3XL">3XL</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group"><label class="form-label">Quantity</label><input class="form-input" type="number" id="stockQty" min="1" value="1" required></div>
+      <div class="form-group"><label class="form-label">Reason</label><input class="form-input" id="stockReason" placeholder="e.g. New shipment, damaged, giveaway"></div>
+      <div class="btn-row">
+        <button type="button" class="btn btn-outline" onclick="closeModal('stockModal')">Cancel</button>
+        <button type="submit" class="btn btn-primary">Save</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Document Vault Modal -->
+<div class="modal-overlay" id="docModal">
+  <div class="modal">
+    <div class="modal-title"><span id="docModalTitle">Add Document</span><button class="modal-close" onclick="closeModal('docModal')">&times;</button></div>
+    <form onsubmit="saveDoc(event)">
+      <input type="hidden" id="docEditId" value="">
+      <div class="form-group"><label class="form-label">Document Name</label><input class="form-input" id="docName" required placeholder="e.g. Section 6 Bylaws 2026"></div>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">Category</label>
+          <select class="form-select" id="docCategory" required>
+            <option value="Bylaws">Bylaws</option>
+            <option value="Guidelines">Guidelines</option>
+            <option value="Treasurer Reports">Treasurer Reports</option>
+            <option value="Meeting Minutes">Meeting Minutes</option>
+            <option value="Forms">Forms</option>
+            <option value="Other">Other</option>
+          </select>
+        </div>
+        <div class="form-group"><label class="form-label">Date</label><input class="form-input" type="date" id="docDate"></div>
+      </div>
+      <div class="form-group"><label class="form-label">Description</label><textarea class="form-textarea" id="docDesc" placeholder="Brief description of the document"></textarea></div>
+      <div class="form-group"><label class="form-label">Upload File (PDF, DOC, image, etc.)</label><input type="file" id="docFile" class="form-input" style="padding:8px;"></div>
+      <div id="docFileInfo" style="font-size:0.75rem;color:var(--text-muted);margin-bottom:8px;"></div>
+      <div class="btn-row">
+        <button type="button" class="btn btn-outline" onclick="closeModal('docModal')">Cancel</button>
+        <button type="submit" class="btn btn-primary">Save Document</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Team Modal -->
+<div class="modal-overlay" id="teamModal">
+  <div class="modal">
+    <div class="modal-title"><span id="teamModalTitle">Add Team Member</span><button class="modal-close" onclick="closeModal('teamModal')">&times;</button></div>
+    <form onsubmit="saveTeamMember(event)">
+      <input type="hidden" id="teamEditId" value="">
+      <div class="form-group"><label class="form-label">Name</label><input class="form-input" id="teamName" required placeholder="Full name"></div>
+      <div class="form-group"><label class="form-label">Role / Position</label>
+        <select class="form-select" id="teamRole" required>
+          <option value="">Select role...</option>
+          <option value="Section Youth Director">Section Youth Director</option>
+          <option value="Worship Leader">Worship Leader</option>
+          <option value="Band Director">Band Director</option>
+          <option value="Singer">Singer</option>
+          <option value="Musician">Musician</option>
+          <option value="Creative Team">Creative Team</option>
+          <option value="Media / Tech">Media / Tech</option>
+          <option value="Emcee / Host">Emcee / Host</option>
+          <option value="Youth Leader">Youth Leader</option>
+          <option value="Volunteer">Volunteer</option>
+          <option value="Other">Other</option>
+        </select>
+      </div>
+      <div class="form-group" id="teamCustomRoleGroup" style="display:none;"><label class="form-label">Custom Role</label><input class="form-input" id="teamCustomRole" placeholder="Enter custom role"></div>
+      <div class="form-group"><label class="form-label">Church</label>
+        <select class="form-select" id="teamChurch"><option value="">Select church...</option></select>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">Phone</label><input class="form-input" type="tel" id="teamPhone" placeholder="(601) 555-0000"></div>
+        <div class="form-group"><label class="form-label">Email</label><input class="form-input" type="text" id="teamEmail" placeholder="email@example.com"></div>
+      </div>
+      <div class="form-group"><label class="form-label">Photo</label><input type="file" accept="image/*" id="teamPhoto" class="form-input" style="padding:8px;"></div>
+      <div id="teamPhotoPreview" style="text-align:center;margin-bottom:8px;"></div>
+      <div class="form-group"><label class="form-label">Notes</label><textarea class="form-textarea" id="teamNotes" placeholder="Instrument played, special skills, etc."></textarea></div>
+      <div class="btn-row">
+        <button type="button" class="btn btn-outline" onclick="closeModal('teamModal')">Cancel</button>
+        <button type="submit" class="btn btn-primary">Save Member</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Flyer Modal -->
+<div class="modal-overlay" id="flyerModal">
+  <div class="modal">
+    <div class="modal-title"><span>Add Flyer</span><button class="modal-close" onclick="closeModal('flyerModal')">&times;</button></div>
+    <form onsubmit="saveFlyer(event)">
+      <input type="hidden" id="flyerEditId" value="">
+      <div class="form-group"><label class="form-label">Title</label><input class="form-input" id="flyerTitle" required placeholder="e.g. March Rally Flyer"></div>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">Date</label><input class="form-input" type="date" id="flyerDate" required></div>
+        <div class="form-group"><label class="form-label">Link to</label>
+          <select class="form-select" id="flyerLink">
+            <option value="">None</option>
+            <optgroup label="Rallies" id="flyerLinkRallies"></optgroup>
+            <optgroup label="Events" id="flyerLinkEvents"></optgroup>
+          </select>
+        </div>
+      </div>
+      <div class="form-group"><label class="form-label">Flyer Image</label><input type="file" accept="image/*" id="flyerImage" class="form-input" style="padding:8px;" required></div>
+      <div id="flyerPreview" style="margin-top:8px;text-align:center;"></div>
+      <div class="btn-row">
+        <button type="button" class="btn btn-outline" onclick="closeModal('flyerModal')">Cancel</button>
+        <button type="submit" class="btn btn-primary">Save Flyer</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Contact Modal -->
+<div class="modal-overlay" id="contactModal">
+  <div class="modal">
+    <div class="modal-title"><span id="contactModalTitle">Add Contact</span><button class="modal-close" onclick="closeModal('contactModal')">&times;</button></div>
+    <form onsubmit="saveContact(event)">
+      <input type="hidden" id="contactEditId" value="">
+      <div class="form-group"><label class="form-label">Name</label><input class="form-input" id="contactName" required placeholder="Full name"></div>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">Role</label>
+          <select class="form-select" id="contactRole">
+            <option value="Youth Leader">Youth Leader</option>
+            <option value="Pastor">Pastor</option>
+            <option value="Assistant Pastor">Assistant Pastor</option>
+            <option value="Youth Worker">Youth Worker</option>
+            <option value="Section Officer">Section Officer</option>
+            <option value="Other">Other</option>
+          </select>
+        </div>
+        <div class="form-group"><label class="form-label">Church</label>
+          <select class="form-select" id="contactChurch"><option value="">None</option></select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">Phone</label><input class="form-input" type="tel" id="contactPhone" placeholder="(601) 555-0123"></div>
+        <div class="form-group"><label class="form-label">Email</label><input class="form-input" type="text" id="contactEmail" placeholder="name@email.com"></div>
+      </div>
+      <div class="form-group"><label class="form-label">Notes</label><textarea class="form-textarea" id="contactNotes" placeholder="Any notes..."></textarea></div>
+      <div class="btn-row">
+        <button type="button" class="btn btn-outline" onclick="closeModal('contactModal')">Cancel</button>
+        <button type="submit" class="btn btn-primary">Save Contact</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Note Modal -->
+<div class="modal-overlay" id="noteModal">
+  <div class="modal">
+    <div class="modal-title"><span id="noteModalTitle">New Note</span><button class="modal-close" onclick="closeModal('noteModal')">&times;</button></div>
+    <form onsubmit="saveNote(event)">
+      <input type="hidden" id="noteEditId" value="">
+      <div class="form-group"><label class="form-label">Title</label><input class="form-input" id="noteTitle" required placeholder="e.g. March Business Meeting"></div>
+      <div class="form-group"><label class="form-label">Tags</label>
+        <div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:4px;">
+          <label style="font-size:0.78rem;display:flex;align-items:center;gap:3px;"><input type="checkbox" value="Business Meeting" class="noteTagCheck"> Business Meeting</label>
+          <label style="font-size:0.78rem;display:flex;align-items:center;gap:3px;"><input type="checkbox" value="Planning" class="noteTagCheck"> Planning</label>
+          <label style="font-size:0.78rem;display:flex;align-items:center;gap:3px;"><input type="checkbox" value="Presbyter" class="noteTagCheck"> Presbyter</label>
+          <label style="font-size:0.78rem;display:flex;align-items:center;gap:3px;"><input type="checkbox" value="Action Items" class="noteTagCheck"> Action Items</label>
+          <label style="font-size:0.78rem;display:flex;align-items:center;gap:3px;"><input type="checkbox" value="Ideas" class="noteTagCheck"> Ideas</label>
+        </div>
+      </div>
+      <div class="form-group"><label class="form-label">Content</label><textarea class="form-textarea" id="noteContent" style="min-height:180px;" placeholder="Type your notes here..."></textarea></div>
+      <div class="btn-row">
+        <button type="button" class="btn btn-outline" onclick="closeModal('noteModal')">Cancel</button>
+        <button type="submit" class="btn btn-primary">Save Note</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Detail Modal -->
+<div class="modal-overlay" id="detailModal">
+  <div class="modal">
+    <div class="modal-title"><span>Details</span><button class="modal-close" onclick="closeModal('detailModal')">&times;</button></div>
+    <div id="detailContent"></div>
+  </div>
+</div>
+
+<script>
+// ===== STORAGE =====
+const KEYS = {
+  rallies: 's6y_rallies', events: 's6y_events', budget: 's6y_budget',
+  churches: 's6y_churches', goals: 's6y_goals', mission: 's6y_mission',
+  missionSettings: 's6y_missionSettings', rotation: 's6y_rotation', rotationIdx: 's6y_rotationIdx',
+  flyers: 's6y_flyers', contacts: 's6y_contacts', notes: 's6y_notes',
+  merchItems: 's6y_merchItems', merchSales: 's6y_merchSales',
+  docs: 's6y_docs', team: 's6y_team'
+};
+function load(k) { try { return JSON.parse(localStorage.getItem(k)) || []; } catch { return []; } }
+function loadObj(k, def) { try { return JSON.parse(localStorage.getItem(k)) || def; } catch { return def; } }
+function save(k, d) { localStorage.setItem(k, JSON.stringify(d)); }
+
+let rallies = load(KEYS.rallies);
+let events = load(KEYS.events);
+let budgetEntries = load(KEYS.budget);
+let churches = load(KEYS.churches);
+let goals = load(KEYS.goals);
+let missionEntries = load(KEYS.mission);
+let missionSettings = loadObj(KEYS.missionSettings, { year: 2026, goal: 5000, name: 'Move the Mission' });
+let rotationOrder = load(KEYS.rotation); // array of church IDs
+let rotationIdx = parseInt(localStorage.getItem(KEYS.rotationIdx)) || 0;
+let flyers = load(KEYS.flyers);
+let contacts = load(KEYS.contacts);
+let notes = load(KEYS.notes);
+let merchItems = load(KEYS.merchItems);
+let merchSales = load(KEYS.merchSales);
+let docs = load(KEYS.docs);
+let team = load(KEYS.team);
+let budgetTab = 'all';
+let noteFilter = 'all';
+let merchTab = 'inventory';
+let charts = {};
+
+// ===== NAVIGATION =====
+function showPage(page) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('page-' + page).classList.add('active');
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  const navBtn = document.querySelector(`[data-page="${page}"]`);
+  if (navBtn) navBtn.classList.add('active');
+  // For sub-pages under "More"
+  if (['events','reports','settings','flyers','contacts','notes','merch','docs','team'].includes(page)) {
+    document.querySelector('[data-page="more-menu"]').classList.add('active');
+  }
+  renderAll();
+}
+
+// ===== MODALS =====
+function openModal(id) {
+  document.getElementById(id).classList.add('active');
+  if (id === 'rallyModal' || id === 'missionModal') populateChurchDropdowns();
+  if (id === 'contactModal') populateContactChurchDropdown();
+  if (id === 'teamModal') populateTeamChurchDropdown();
+  if (id === 'flyerModal') populateFlyerLinks();
+  if (id === 'saleModal') populateSaleItems();
+  if (id === 'rotationModal') renderRotationEditor();
+}
+function closeModal(id) {
+  document.getElementById(id).classList.remove('active');
+  const form = document.getElementById(id).querySelector('form');
+  if (form) form.reset();
+  ['rallyEditId','eventEditId','budgetEditId','churchEditId','goalEditId','missionEditId','flyerEditId','contactEditId','noteEditId','merchEditId','stockItemId','docEditId','teamEditId'].forEach(i => {
+    const el = document.getElementById(i); if (el) el.value = '';
+  });
+  document.getElementById('rallyPhotoPreview') && (document.getElementById('rallyPhotoPreview').innerHTML = '');
+  document.getElementById('merchPhotoPreview') && (document.getElementById('merchPhotoPreview').innerHTML = '');
+  document.getElementById('teamPhotoPreview') && (document.getElementById('teamPhotoPreview').innerHTML = '');
+  document.getElementById('docFileInfo') && (document.getElementById('docFileInfo').innerHTML = '');
+  if (id === 'teamModal') { document.getElementById('teamCustomRoleGroup').style.display = 'none'; }
+  // Reset modal titles
+  const titles = { rallyModal:'Add Youth Rally', churchModal:'Add Church', eventModal:'Add Event', budgetModal:'Add Budget Entry', contactModal:'Add Contact', noteModal:'New Note', merchModal:'Add Merch Item', docModal:'Add Document', teamModal:'Add Team Member' };
+  if (titles[id]) { const t = document.getElementById(id).querySelector('.modal-title span'); if(t) t.textContent = titles[id]; }
+}
+
+function populateChurchDropdowns() {
+  ['rallyChurch','missionChurch'].forEach(selId => {
+    const sel = document.getElementById(selId);
+    if (!sel) return;
+    const val = sel.value;
+    const extra = selId === 'missionChurch' ? '<option value="Individual">Individual</option><option value="Other">Other</option>' : '';
+    sel.innerHTML = '<option value="">Select church...</option>' + churches.map(c =>
+      `<option value="${c.id}">${esc(c.name)}</option>`
+    ).join('') + extra;
+    sel.value = val;
+  });
+}
+
+// ===== HELPERS =====
+function esc(s) { const d = document.createElement('div'); d.textContent = s || ''; return d.innerHTML; }
+function formatDate(ds) { if (!ds) return ''; const d = new Date(ds+'T00:00:00'); return d.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}); }
+function formatDateLong(ds) { if (!ds) return ''; const d = new Date(ds+'T00:00:00'); return d.toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric',year:'numeric'}); }
+function daysUntil(ds) { const t = new Date(); t.setHours(0,0,0,0); return Math.ceil((new Date(ds+'T00:00:00') - t) / 86400000); }
+function getChurchName(id) { const c = churches.find(x => x.id === id); return c ? c.name : id || 'Unknown'; }
+function getYears() {
+  const all = [...rallies.map(r=>r.date), ...events.map(e=>e.date), ...budgetEntries.map(b=>b.date)].filter(Boolean);
+  const years = [...new Set(all.map(d => d.substring(0,4)))].sort();
+  if (!years.length) years.push(new Date().getFullYear().toString());
+  return years;
+}
+
+// ===== RALLY FUNCTIONS =====
+function saveRally(e) {
+  e.preventDefault();
+  const editId = document.getElementById('rallyEditId').value;
+  const photoInput = document.getElementById('rallyPhotos');
+  const existingPhotos = editId ? (rallies.find(r=>r.id===editId)?.photos || []) : [];
+
+  const rally = {
+    id: editId || Date.now().toString(),
+    name: document.getElementById('rallyName').value,
+    date: document.getElementById('rallyDate').value,
+    churchId: document.getElementById('rallyChurch').value,
+    location: document.getElementById('rallyLocation').value,
+    attendance: parseInt(document.getElementById('rallyAttendance').value) || 0,
+    offering: parseFloat(document.getElementById('rallyOffering').value) || 0,
+    preacher: document.getElementById('rallyPreacher').value,
+    sermon: document.getElementById('rallySermon').value,
+    notes: document.getElementById('rallyNotes').value,
+    photos: existingPhotos
+  };
+
+  // Handle photos
+  if (photoInput.files.length > 0) {
+    const promises = Array.from(photoInput.files).map(f => new Promise(res => {
+      const reader = new FileReader();
+      reader.onload = ev => {
+        // Compress by drawing to canvas
+        const img = new Image();
+        img.onload = () => {
+          const canvas = document.createElement('canvas');
+          const max = 400;
+          let w = img.width, h = img.height;
+          if (w > max || h > max) { const r = Math.min(max/w, max/h); w *= r; h *= r; }
+          canvas.width = w; canvas.height = h;
+          canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+          res(canvas.toDataURL('image/jpeg', 0.6));
+        };
+        img.src = ev.target.result;
+      };
+      reader.readAsDataURL(f);
+    }));
+    Promise.all(promises).then(photos => {
+      rally.photos = [...existingPhotos, ...photos];
+      finishSaveRally(rally, editId);
+    });
+  } else {
+    finishSaveRally(rally, editId);
+  }
+}
+
+function finishSaveRally(rally, editId) {
+  if (editId) { const i = rallies.findIndex(r=>r.id===editId); if(i>=0) rallies[i]=rally; }
+  else rallies.push(rally);
+  save(KEYS.rallies, rallies);
+  closeModal('rallyModal');
+  renderAll();
+}
+
+function editRally(id) {
+  const r = rallies.find(x=>x.id===id); if(!r) return;
+  document.getElementById('rallyEditId').value = r.id;
+  document.getElementById('rallyName').value = r.name;
+  document.getElementById('rallyDate').value = r.date;
+  document.getElementById('rallyLocation').value = r.location || '';
+  document.getElementById('rallyAttendance').value = r.attendance || '';
+  document.getElementById('rallyOffering').value = r.offering || '';
+  document.getElementById('rallyPreacher').value = r.preacher || '';
+  document.getElementById('rallySermon').value = r.sermon || '';
+  document.getElementById('rallyNotes').value = r.notes || '';
+  populateChurchDropdowns();
+  document.getElementById('rallyChurch').value = r.churchId || '';
+  if (r.photos && r.photos.length) {
+    document.getElementById('rallyPhotoPreview').innerHTML = r.photos.map((p,i) =>
+      `<img src="${p}" class="photo-thumb" onclick="viewPhoto('${r.id}',${i})">`
+    ).join('');
+  }
+  document.getElementById('rallyModalTitle').textContent = 'Edit Rally';
+  openModal('rallyModal');
+}
+
+function deleteRally(id) { if(!confirm('Delete this rally?')) return; rallies=rallies.filter(r=>r.id!==id); save(KEYS.rallies,rallies); renderAll(); }
+
+function viewRally(id) {
+  const r = rallies.find(x=>x.id===id); if(!r) return;
+  const churchName = r.churchId ? getChurchName(r.churchId) : (r.location || '');
+  document.getElementById('detailContent').innerHTML = `
+    <h3 style="font-size:1.05rem;font-weight:700;margin-bottom:3px;">${esc(r.name)}</h3>
+    <p style="color:var(--text-muted);font-size:0.82rem;">${formatDateLong(r.date)}</p>
+    ${churchName ? `<p style="color:var(--text-muted);font-size:0.82rem;">${esc(churchName)}</p>` : ''}
+    <div class="stats-grid" style="margin:14px 0;">
+      <div class="stat-card"><div class="stat-value">${r.attendance}</div><div class="stat-label">Attendance</div></div>
+      <div class="stat-card accent"><div class="stat-value">$${r.offering.toFixed(2)}</div><div class="stat-label">Offering</div></div>
+    </div>
+    ${r.preacher ? `<div style="margin-bottom:10px;"><strong style="font-size:0.72rem;color:var(--text-muted);text-transform:uppercase;">Preacher</strong><p style="font-size:0.9rem;">${esc(r.preacher)}</p></div>` : ''}
+    ${r.sermon ? `<div style="margin-bottom:10px;"><strong style="font-size:0.72rem;color:var(--text-muted);text-transform:uppercase;">Sermon</strong><p style="font-size:0.9rem;">${esc(r.sermon)}</p></div>` : ''}
+    ${r.notes ? `<div style="margin-bottom:10px;"><strong style="font-size:0.72rem;color:var(--text-muted);text-transform:uppercase;">Notes</strong><p style="font-size:0.9rem;">${esc(r.notes)}</p></div>` : ''}
+    ${r.photos && r.photos.length ? `<div style="margin-bottom:10px;"><strong style="font-size:0.72rem;color:var(--text-muted);text-transform:uppercase;">Photos</strong><div class="photo-grid">${r.photos.map((p,i)=>`<img src="${p}" class="photo-thumb" onclick="viewPhoto('${r.id}',${i})">`).join('')}</div></div>` : ''}
+    <div class="btn-row">
+      <button class="btn btn-outline" onclick="closeModal('detailModal');editRally('${r.id}')">Edit</button>
+      <button class="btn btn-danger" onclick="closeModal('detailModal');deleteRally('${r.id}')">Delete</button>
+    </div>`;
+  openModal('detailModal');
+}
+
+function viewPhoto(rallyId, idx) {
+  const r = rallies.find(x=>x.id===rallyId);
+  if (!r || !r.photos[idx]) return;
+  const w = window.open('','_blank','width=600,height=600');
+  w.document.write(`<html><body style="margin:0;display:flex;align-items:center;justify-content:center;background:#000;"><img src="${r.photos[idx]}" style="max-width:100%;max-height:100vh;"></body></html>`);
+}
+
+// ===== CHURCH FUNCTIONS =====
+function saveChurch(e) {
+  e.preventDefault();
+  const editId = document.getElementById('churchEditId').value;
+  const church = {
+    id: editId || Date.now().toString(),
+    name: document.getElementById('churchName').value,
+    pastor: document.getElementById('churchPastor').value,
+    address: document.getElementById('churchAddress').value,
+    phone: document.getElementById('churchPhone').value,
+    email: document.getElementById('churchEmail').value,
+    youthLeader: document.getElementById('churchYouthLeader').value,
+    notes: document.getElementById('churchNotes').value
+  };
+  if (editId) { const i = churches.findIndex(c=>c.id===editId); if(i>=0) churches[i]=church; }
+  else churches.push(church);
+  save(KEYS.churches, churches);
+  closeModal('churchModal');
+  renderAll();
+}
+function editChurch(id) {
+  const c = churches.find(x=>x.id===id); if(!c) return;
+  document.getElementById('churchEditId').value = c.id;
+  document.getElementById('churchName').value = c.name;
+  document.getElementById('churchPastor').value = c.pastor || '';
+  document.getElementById('churchAddress').value = c.address || '';
+  document.getElementById('churchPhone').value = c.phone || '';
+  document.getElementById('churchEmail').value = c.email || '';
+  document.getElementById('churchYouthLeader').value = c.youthLeader || '';
+  document.getElementById('churchNotes').value = c.notes || '';
+  document.getElementById('churchModalTitle').textContent = 'Edit Church';
+  openModal('churchModal');
+}
+function deleteChurch(id) { if(!confirm('Delete this church?')) return; churches=churches.filter(c=>c.id!==id); save(KEYS.churches,churches); renderAll(); }
+
+// ===== EVENT FUNCTIONS =====
+function saveEvent(e) {
+  e.preventDefault();
+  const editId = document.getElementById('eventEditId').value;
+  const ev = {
+    id: editId || Date.now().toString(),
+    name: document.getElementById('eventName').value,
+    date: document.getElementById('eventDate').value,
+    endDate: document.getElementById('eventEndDate').value || '',
+    location: document.getElementById('eventLocation').value,
+    description: document.getElementById('eventDescription').value,
+    reminder: parseInt(document.getElementById('eventReminder').value) || 0
+  };
+  if (editId) { const i = events.findIndex(x=>x.id===editId); if(i>=0) events[i]=ev; }
+  else events.push(ev);
+  save(KEYS.events, events);
+  closeModal('eventModal');
+  renderAll();
+}
+function editEvent(id) {
+  const ev = events.find(x=>x.id===id); if(!ev) return;
+  document.getElementById('eventEditId').value = ev.id;
+  document.getElementById('eventName').value = ev.name;
+  document.getElementById('eventDate').value = ev.date;
+  document.getElementById('eventEndDate').value = ev.endDate || '';
+  document.getElementById('eventLocation').value = ev.location || '';
+  document.getElementById('eventDescription').value = ev.description || '';
+  document.getElementById('eventReminder').value = ev.reminder || 0;
+  document.getElementById('eventModalTitle').textContent = 'Edit Event';
+  openModal('eventModal');
+}
+function deleteEvent(id) { if(!confirm('Delete this event?')) return; events=events.filter(x=>x.id!==id); save(KEYS.events,events); renderAll(); }
+
+// ===== BUDGET FUNCTIONS =====
+function saveBudgetEntry(e) {
+  e.preventDefault();
+  const editId = document.getElementById('budgetEditId').value;
+  const entry = {
+    id: editId || Date.now().toString(),
+    type: document.getElementById('budgetType').value,
+    category: document.getElementById('budgetCategory').value,
+    description: document.getElementById('budgetDesc').value,
+    amount: parseFloat(document.getElementById('budgetAmount').value) || 0,
+    date: document.getElementById('budgetDate').value
+  };
+  if (editId) { const i = budgetEntries.findIndex(x=>x.id===editId); if(i>=0) budgetEntries[i]=entry; }
+  else budgetEntries.push(entry);
+  save(KEYS.budget, budgetEntries);
+  closeModal('budgetModal');
+  renderAll();
+}
+function editBudgetEntry(id) {
+  const b = budgetEntries.find(x=>x.id===id); if(!b) return;
+  document.getElementById('budgetEditId').value = b.id;
+  document.getElementById('budgetType').value = b.type;
+  document.getElementById('budgetCategory').value = b.category;
+  document.getElementById('budgetDesc').value = b.description;
+  document.getElementById('budgetAmount').value = b.amount;
+  document.getElementById('budgetDate').value = b.date;
+  document.getElementById('budgetModalTitle').textContent = 'Edit Entry';
+  openModal('budgetModal');
+}
+function deleteBudgetEntry(id) { if(!confirm('Delete?')) return; budgetEntries=budgetEntries.filter(x=>x.id!==id); save(KEYS.budget,budgetEntries); renderAll(); }
+function setBudgetTab(t, btn) { budgetTab=t; document.querySelectorAll('#page-budget .tab-btn').forEach(b=>b.classList.remove('active')); btn.classList.add('active'); renderBudget(); }
+
+// ===== GOAL FUNCTIONS =====
+function saveGoal(e) {
+  e.preventDefault();
+  const editId = document.getElementById('goalEditId').value;
+  const goal = {
+    id: editId || Date.now().toString(),
+    name: document.getElementById('goalName').value,
+    target: parseFloat(document.getElementById('goalTarget').value),
+    type: document.getElementById('goalType').value,
+    year: parseInt(document.getElementById('goalYear').value)
+  };
+  if (editId) { const i = goals.findIndex(g=>g.id===editId); if(i>=0) goals[i]=goal; }
+  else goals.push(goal);
+  save(KEYS.goals, goals);
+  closeModal('goalModal');
+  renderAll();
+}
+function deleteGoal(id) { if(!confirm('Delete?')) return; goals=goals.filter(g=>g.id!==id); save(KEYS.goals,goals); renderAll(); }
+
+// ===== MISSION FUNCTIONS =====
+function saveMissionEntry(e) {
+  e.preventDefault();
+  const editId = document.getElementById('missionEditId').value;
+  const entry = {
+    id: editId || Date.now().toString(),
+    churchId: document.getElementById('missionChurch').value,
+    description: document.getElementById('missionDesc').value,
+    amount: parseFloat(document.getElementById('missionAmount').value) || 0,
+    date: document.getElementById('missionDate').value
+  };
+  if (editId) { const i = missionEntries.findIndex(x=>x.id===editId); if(i>=0) missionEntries[i]=entry; }
+  else missionEntries.push(entry);
+  save(KEYS.mission, missionEntries);
+  closeModal('missionModal');
+  renderAll();
+}
+function deleteMissionEntry(id) { if(!confirm('Delete?')) return; missionEntries=missionEntries.filter(x=>x.id!==id); save(KEYS.mission,missionEntries); renderAll(); }
+
+function saveMissionSettings(e) {
+  e.preventDefault();
+  missionSettings = {
+    year: parseInt(document.getElementById('missionYear').value),
+    goal: parseFloat(document.getElementById('missionGoalAmount').value),
+    name: document.getElementById('missionCampaignName').value || 'Move the Mission'
+  };
+  save(KEYS.missionSettings, missionSettings);
+  closeModal('missionSettingsModal');
+  renderAll();
+}
+
+// ===== ROTATION =====
+function renderRotationEditor() {
+  const html = churches.map(c => {
+    const inRotation = rotationOrder.includes(c.id);
+    const idx = rotationOrder.indexOf(c.id);
+    return `<div style="display:flex;align-items:center;gap:10px;padding:8px;border:1px solid var(--border);border-radius:8px;margin-bottom:6px;">
+      <input type="checkbox" data-church="${c.id}" ${inRotation?'checked':''} style="width:18px;height:18px;">
+      <span style="flex:1;font-weight:600;font-size:0.88rem;">${esc(c.name)}</span>
+      ${inRotation ? `<span style="font-size:0.72rem;color:var(--text-muted);">#${idx+1}</span>` : ''}
+      <button type="button" onclick="moveRotation('${c.id}',-1)" style="border:none;background:none;cursor:pointer;font-size:1rem;">&#9650;</button>
+      <button type="button" onclick="moveRotation('${c.id}',1)" style="border:none;background:none;cursor:pointer;font-size:1rem;">&#9660;</button>
+    </div>`;
+  }).join('');
+  document.getElementById('rotationEditor').innerHTML = html || '<p style="color:var(--text-muted);font-size:0.82rem;">Add churches first to set up rotation.</p>';
+  document.getElementById('rotationCurrent').value = rotationIdx;
+}
+
+function moveRotation(churchId, dir) {
+  const idx = rotationOrder.indexOf(churchId);
+  if (idx < 0) return;
+  const newIdx = idx + dir;
+  if (newIdx < 0 || newIdx >= rotationOrder.length) return;
+  [rotationOrder[idx], rotationOrder[newIdx]] = [rotationOrder[newIdx], rotationOrder[idx]];
+  renderRotationEditor();
+}
+
+function saveRotation() {
+  const checks = document.querySelectorAll('#rotationEditor input[type="checkbox"]');
+  const newOrder = [];
+  // Keep existing order for checked items, add new ones at end
+  rotationOrder.forEach(id => {
+    const cb = document.querySelector(`#rotationEditor input[data-church="${id}"]`);
+    if (cb && cb.checked) newOrder.push(id);
+  });
+  checks.forEach(cb => {
+    if (cb.checked && !newOrder.includes(cb.dataset.church)) newOrder.push(cb.dataset.church);
+  });
+  rotationOrder = newOrder;
+  rotationIdx = parseInt(document.getElementById('rotationCurrent').value) || 0;
+  save(KEYS.rotation, rotationOrder);
+  localStorage.setItem(KEYS.rotationIdx, rotationIdx);
+  closeModal('rotationModal');
+  renderAll();
+}
+
+// ===== TABS =====
+function setRallyTab(tab, btn) {
+  document.querySelectorAll('#page-rallies .tab-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('rallyTabList').style.display = tab==='list'?'block':'none';
+  document.getElementById('rallyTabRotation').style.display = tab==='rotation'?'block':'none';
+}
+function setGoalTab(tab, btn) {
+  document.querySelectorAll('#page-goals .tab-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('goalTabMission').style.display = tab==='mission'?'block':'none';
+  document.getElementById('goalTabAnnual').style.display = tab==='annual'?'block':'none';
+}
+
+// ===== RENDERERS =====
+function renderAll() {
+  renderDashboard();
+  renderRallies();
+  renderChurches();
+  renderEvents();
+  renderBudget();
+  renderGoals();
+  renderMission();
+  renderRotation();
+  renderReports();
+  renderFlyers();
+  renderContacts();
+  renderNotes();
+  renderMerch();
+  renderDocs();
+  renderTeam();
+}
+
+function renderDashboard() {
+  const totalRallies = rallies.length;
+  const totalAtt = rallies.reduce((s,r)=>s+(r.attendance||0),0);
+  const totalOff = rallies.reduce((s,r)=>s+(r.offering||0),0);
+  const avg = totalRallies ? Math.round(totalAtt/totalRallies) : 0;
+
+  document.getElementById('dashStats').innerHTML = `
+    <div class="stat-card"><div class="stat-value">${totalRallies}</div><div class="stat-label">Rallies</div></div>
+    <div class="stat-card"><div class="stat-value">${avg}</div><div class="stat-label">Avg Attendance</div></div>
+    <div class="stat-card accent"><div class="stat-value">$${totalOff.toFixed(0)}</div><div class="stat-label">Total Offering</div></div>
+    <div class="stat-card success"><div class="stat-value">${events.filter(e=>daysUntil(e.date)>=0).length}</div><div class="stat-label">Upcoming</div></div>`;
+
+  // Reminders
+  const reminders = events.filter(e => {
+    const days = daysUntil(e.date);
+    return days >= 0 && days <= (e.reminder || 7);
+  }).sort((a,b) => a.date.localeCompare(b.date));
+  if (reminders.length) {
+    document.getElementById('dashReminders').innerHTML = reminders.map(e => {
+      const days = daysUntil(e.date);
+      const label = days===0?'TODAY':days===1?'TOMORROW':`IN ${days} DAYS`;
+      return `<div class="card" style="border-left:4px solid var(--accent);background:#fffdf5;">
+        <div style="display:flex;align-items:center;gap:8px;">
+          <span style="font-size:1.2rem;">&#128276;</span>
+          <div style="flex:1;"><div class="list-title">${esc(e.name)}</div><div class="list-subtitle">${formatDate(e.date)}${e.location?' &bull; '+esc(e.location):''}</div></div>
+          <span class="reminder-badge">${label}</span>
+        </div></div>`;
+    }).join('');
+  } else {
+    document.getElementById('dashReminders').innerHTML = '';
+  }
+
+  // Charts
+  renderDashCharts();
+
+  // Move the Mission summary on dash
+  const mTotal = missionEntries.reduce((s,m)=>s+m.amount,0);
+  const mPct = missionSettings.goal > 0 ? Math.min((mTotal/missionSettings.goal)*100,100) : 0;
+  document.getElementById('dashMission').innerHTML = `
+    <div class="mission-hero" style="cursor:pointer" onclick="showPage('goals')">
+      <h3>${esc(missionSettings.name)} ${missionSettings.year}</h3>
+      <div class="mission-amount">$${mTotal.toFixed(2)}</div>
+      <div class="mission-goal">of $${missionSettings.goal.toFixed(2)} goal</div>
+      <div class="mission-bar"><div class="mission-bar-fill" style="width:${mPct}%"></div></div>
+      <div style="font-size:0.75rem;opacity:0.9;">${mPct.toFixed(1)}% raised &bull; $${(missionSettings.goal-mTotal).toFixed(2)} to go</div>
+    </div>`;
+
+  // Recent rallies
+  const recent = [...rallies].sort((a,b)=>b.date.localeCompare(a.date)).slice(0,3);
+  document.getElementById('dashRecentRallies').innerHTML = recent.length ? recent.map(r => `
+    <div class="list-item" style="cursor:pointer" onclick="viewRally('${r.id}')">
+      <div class="list-icon blue">&#9981;</div>
+      <div class="list-content">
+        <div class="list-title">${esc(r.name)}</div>
+        <div class="list-subtitle">${formatDate(r.date)}${r.churchId?' &bull; '+esc(getChurchName(r.churchId)):''}</div>
+        <div class="list-meta"><span class="meta-tag">${r.attendance} attended</span><span class="meta-tag highlight">$${r.offering.toFixed(2)}</span></div>
+      </div></div>`).join('') : '<div class="empty-state"><p>No rallies yet</p></div>';
+
+  // Upcoming events
+  const upcoming = [...events].filter(e=>daysUntil(e.date)>=0).sort((a,b)=>a.date.localeCompare(b.date)).slice(0,3);
+  document.getElementById('dashUpcomingEvents').innerHTML = upcoming.length ? upcoming.map(e => {
+    const d = daysUntil(e.date);
+    const label = d===0?'Today':d===1?'Tomorrow':`In ${d} days`;
+    return `<div class="list-item"><div class="list-icon gold">&#128197;</div><div class="list-content">
+      <div class="list-title">${esc(e.name)}</div>
+      <div class="list-subtitle">${formatDate(e.date)}${e.location?' &bull; '+esc(e.location):''}</div>
+      <div class="list-meta"><span class="meta-tag highlight">${label}</span></div></div></div>`;
+  }).join('') : '<div class="empty-state"><p>No upcoming events</p></div>';
+
+  // Budget overview
+  const inc = budgetEntries.filter(b=>b.type==='income').reduce((s,b)=>s+b.amount,0);
+  const exp = budgetEntries.filter(b=>b.type==='expense').reduce((s,b)=>s+b.amount,0);
+  const bal = inc - exp;
+  const pct = inc > 0 ? Math.min((exp/inc)*100,100) : 0;
+  const bColor = pct>90?'var(--danger)':pct>70?'var(--warning)':'var(--success)';
+  document.getElementById('dashBudgetOverview').innerHTML = `
+    <div style="display:flex;justify-content:space-between;margin-bottom:8px;">
+      <div><span style="font-size:0.72rem;color:var(--text-muted);font-weight:600;">BALANCE</span><br>
+        <span style="font-size:1.2rem;font-weight:800;color:${bal>=0?'var(--success)':'var(--danger)'}">$${bal.toFixed(2)}</span></div>
+      <div style="text-align:right;">
+        <span style="font-size:0.72rem;color:var(--text-muted);font-weight:600;">IN</span> <span style="font-size:0.82rem;font-weight:700;color:var(--success)">$${inc.toFixed(2)}</span><br>
+        <span style="font-size:0.72rem;color:var(--text-muted);font-weight:600;">OUT</span> <span style="font-size:0.82rem;font-weight:700;color:var(--danger)">$${exp.toFixed(2)}</span></div>
+    </div>
+    <div class="budget-bar"><div class="budget-bar-fill" style="width:${pct}%;background:${bColor}"></div></div>
+    <div class="budget-bar-labels"><span>${pct.toFixed(0)}% spent</span><span>${(100-pct).toFixed(0)}% remaining</span></div>`;
+}
+
+function renderDashCharts() {
+  const years = getYears();
+  const yearSel = document.getElementById('chartYear');
+  const curVal = yearSel.value || years[years.length-1];
+  yearSel.innerHTML = years.map(y=>`<option value="${y}" ${y===curVal?'selected':''}>${y}</option>`).join('');
+  const yr = yearSel.value;
+  const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const attData = months.map((_,i) => {
+    const m = String(i+1).padStart(2,'0');
+    return rallies.filter(r=>r.date&&r.date.startsWith(yr+'-'+m)).reduce((s,r)=>s+(r.attendance||0),0);
+  });
+  const offData = months.map((_,i) => {
+    const m = String(i+1).padStart(2,'0');
+    return rallies.filter(r=>r.date&&r.date.startsWith(yr+'-'+m)).reduce((s,r)=>s+(r.offering||0),0);
+  });
+
+  if (charts.attendance) charts.attendance.destroy();
+  if (charts.offering) charts.offering.destroy();
+
+  const ctx1 = document.getElementById('attendanceChart');
+  if (ctx1) {
+    charts.attendance = new Chart(ctx1, {
+      type: 'bar', data: { labels: months, datasets: [{ label: 'Attendance', data: attData, backgroundColor: 'rgba(30,58,95,0.7)', borderRadius: 6 }] },
+      options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true } } }
+    });
+  }
+  const ctx2 = document.getElementById('offeringChart');
+  if (ctx2) {
+    charts.offering = new Chart(ctx2, {
+      type: 'line', data: { labels: months, datasets: [{ label: 'Offering', data: offData, borderColor: '#e8a838', backgroundColor: 'rgba(232,168,56,0.1)', fill: true, tension: 0.3, pointRadius: 4 }] },
+      options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, ticks: { callback: v=>'$'+v } } } }
+    });
+  }
+}
+
+function renderRallies() {
+  const q = (document.getElementById('rallySearch')?.value||'').toLowerCase();
+  let f = [...rallies].sort((a,b)=>b.date.localeCompare(a.date));
+  if (q) f = f.filter(r => (r.name||'').toLowerCase().includes(q)||(r.preacher||'').toLowerCase().includes(q)||(r.sermon||'').toLowerCase().includes(q)||(r.location||'').toLowerCase().includes(q));
+  document.getElementById('rallyList').innerHTML = f.length ? f.map(r => `
+    <div class="card" style="cursor:pointer" onclick="viewRally('${r.id}')">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;">
+        <div><div style="font-weight:700;font-size:0.92rem;">${esc(r.name)}</div>
+          <div style="font-size:0.78rem;color:var(--text-muted);margin-top:2px;">${formatDate(r.date)}${r.churchId?' &bull; '+esc(getChurchName(r.churchId)):''}</div></div>
+        <div class="actions-row">
+          <button class="btn btn-sm btn-outline" onclick="event.stopPropagation();editRally('${r.id}')">Edit</button>
+          <button class="btn btn-sm btn-danger" onclick="event.stopPropagation();deleteRally('${r.id}')">Del</button></div>
+      </div>
+      <div class="list-meta" style="margin-top:6px;">
+        <span class="meta-tag">${r.attendance} attended</span><span class="meta-tag highlight">$${(r.offering||0).toFixed(2)}</span>
+        ${r.preacher?`<span class="meta-tag">${esc(r.preacher)}</span>`:''}
+      </div>
+      ${r.sermon?`<div style="font-size:0.78rem;color:var(--text-muted);margin-top:4px;font-style:italic;">"${esc(r.sermon)}"</div>`:''}
+      ${r.photos&&r.photos.length?`<div class="photo-grid" style="margin-top:6px;">${r.photos.slice(0,3).map((p,i)=>`<img src="${p}" class="photo-thumb" style="width:40px;height:40px;" onclick="event.stopPropagation();viewPhoto('${r.id}',${i})">`).join('')}${r.photos.length>3?`<span style="font-size:0.72rem;color:var(--text-muted);align-self:center;">+${r.photos.length-3} more</span>`:''}</div>`:''}
+    </div>`).join('') : `<div class="empty-state"><p>${q?'No rallies match':'No rallies yet. Add your first one!'}</p></div>`;
+}
+
+function renderChurches() {
+  const q = (document.getElementById('churchSearch')?.value||'').toLowerCase();
+  let f = [...churches].sort((a,b)=>a.name.localeCompare(b.name));
+  if (q) f = f.filter(c=>(c.name||'').toLowerCase().includes(q)||(c.pastor||'').toLowerCase().includes(q)||(c.youthLeader||'').toLowerCase().includes(q));
+  if (!f.length) { document.getElementById('churchList').innerHTML = '<div class="empty-state"><p>No churches yet. Add your section churches!</p></div>'; return; }
+
+  document.getElementById('churchList').innerHTML = f.map(c => {
+    const initials = c.name.split(' ').map(w=>w[0]).join('').substring(0,2).toUpperCase();
+    const hosted = rallies.filter(r=>r.churchId===c.id).length;
+    return `<div class="card" style="padding:14px;">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:8px;">
+        <div class="church-avatar">${initials}</div>
+        <div style="flex:1;min-width:0;">
+          <div style="font-weight:700;font-size:0.92rem;">${esc(c.name)}</div>
+          ${c.pastor?`<div style="font-size:0.78rem;color:var(--text-muted);">Pastor ${esc(c.pastor)}</div>`:''}
+        </div>
+      </div>
+      <div class="list-meta" style="margin-bottom:8px;">
+        ${c.youthLeader?`<span class="meta-tag">YL: ${esc(c.youthLeader)}</span>`:''}
+        <span class="meta-tag highlight">${hosted} rallies hosted</span>
+        ${c.phone?`<span class="meta-tag">${esc(c.phone)}</span>`:''}
+      </div>
+      ${c.address?`<div style="font-size:0.75rem;color:var(--text-muted);margin-bottom:8px;">${esc(c.address)}</div>`:''}
+      <div style="display:flex;gap:8px;">
+        <button type="button" class="btn btn-sm btn-outline" style="padding:8px 16px;" onclick="event.stopPropagation();editChurch('${c.id}')">Edit</button>
+        <button type="button" class="btn btn-sm btn-danger" style="padding:8px 16px;" onclick="event.stopPropagation();deleteChurch('${c.id}')">Delete</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function renderEvents() {
+  const sorted = [...events].sort((a,b)=>a.date.localeCompare(b.date));
+  const upcoming = sorted.filter(e=>daysUntil(e.date)>=0);
+  const past = sorted.filter(e=>daysUntil(e.date)<0).reverse();
+  if (!sorted.length) { document.getElementById('eventList').innerHTML = '<div class="empty-state"><p>No events yet!</p></div>'; return; }
+  let html = '';
+  if (upcoming.length) {
+    html += '<div class="section-title">Upcoming</div>';
+    html += upcoming.map(e => {
+      const d = daysUntil(e.date); const label = d===0?'Today':d===1?'Tomorrow':`In ${d} days`;
+      return `<div class="card"><div style="display:flex;justify-content:space-between;align-items:flex-start;">
+        <div><div style="font-weight:700;font-size:0.92rem;">${esc(e.name)}</div>
+        <div style="font-size:0.78rem;color:var(--text-muted);">${formatDate(e.date)}${e.endDate?' - '+formatDate(e.endDate):''}${e.location?' &bull; '+esc(e.location):''}</div></div>
+        <div class="actions-row"><button class="btn btn-sm btn-outline" onclick="editEvent('${e.id}')">Edit</button><button class="btn btn-sm btn-danger" onclick="deleteEvent('${e.id}')">Del</button></div>
+      </div><div class="list-meta" style="margin-top:6px;"><span class="meta-tag highlight">${label}</span></div>
+      ${e.description?`<div style="font-size:0.78rem;color:var(--text-muted);margin-top:4px;">${esc(e.description)}</div>`:''}</div>`;
+    }).join('');
+  }
+  if (past.length) {
+    html += '<div class="section-title">Past</div>';
+    html += past.map(e => `<div class="card" style="opacity:0.6;"><div style="display:flex;justify-content:space-between;align-items:flex-start;">
+      <div><div style="font-weight:700;font-size:0.92rem;">${esc(e.name)}</div>
+      <div style="font-size:0.78rem;color:var(--text-muted);">${formatDate(e.date)}${e.location?' &bull; '+esc(e.location):''}</div></div>
+      <div class="actions-row"><button class="btn btn-sm btn-outline" onclick="editEvent('${e.id}')">Edit</button><button class="btn btn-sm btn-danger" onclick="deleteEvent('${e.id}')">Del</button></div>
+    </div></div>`).join('');
+  }
+  document.getElementById('eventList').innerHTML = html;
+}
+
+function renderBudget() {
+  const inc = budgetEntries.filter(b=>b.type==='income').reduce((s,b)=>s+b.amount,0);
+  const exp = budgetEntries.filter(b=>b.type==='expense').reduce((s,b)=>s+b.amount,0);
+  const bal = inc - exp;
+  document.getElementById('budgetStats').innerHTML = `
+    <div class="stat-card success"><div class="stat-value">$${inc.toFixed(2)}</div><div class="stat-label">Income</div></div>
+    <div class="stat-card"><div class="stat-value" style="color:var(--danger)">$${exp.toFixed(2)}</div><div class="stat-label">Expenses</div></div>`;
+
+  let f = [...budgetEntries];
+  if (budgetTab==='income') f=f.filter(b=>b.type==='income');
+  if (budgetTab==='expense') f=f.filter(b=>b.type==='expense');
+  f.sort((a,b)=>b.date.localeCompare(a.date));
+  document.getElementById('budgetList').innerHTML = f.length ? f.map(b => `
+    <div class="card"><div style="display:flex;justify-content:space-between;align-items:flex-start;">
+      <div><div style="display:flex;align-items:center;gap:8px;">
+        <span class="tag ${b.type==='income'?'tag-income':'tag-expense'}">${b.type==='income'?'+ Income':'- Expense'}</span>
+        <span style="font-size:0.72rem;color:var(--text-muted);">${esc(b.category)}</span></div>
+        <div style="font-weight:700;font-size:0.92rem;margin-top:4px;">${esc(b.description)}</div>
+        <div style="font-size:0.78rem;color:var(--text-muted);margin-top:2px;">${formatDate(b.date)}</div></div>
+      <div style="text-align:right;">
+        <div style="font-size:1.05rem;font-weight:800;color:${b.type==='income'?'var(--success)':'var(--danger)'}">${b.type==='income'?'+':'-'}$${b.amount.toFixed(2)}</div>
+        <div class="actions-row" style="margin-top:4px;">
+          <button class="btn btn-sm btn-outline" onclick="editBudgetEntry('${b.id}')">Edit</button>
+          <button class="btn btn-sm btn-danger" onclick="deleteBudgetEntry('${b.id}')">Del</button></div></div></div></div>`).join('') : '<div class="empty-state"><p>No entries</p></div>';
+}
+
+function renderGoals() {
+  const year = new Date().getFullYear();
+  const yearGoals = goals.filter(g => g.year === year);
+  if (!yearGoals.length) {
+    document.getElementById('goalList').innerHTML = '<div class="empty-state"><p>No annual goals set. Add one to track your progress!</p></div>';
+    return;
+  }
+  document.getElementById('goalList').innerHTML = yearGoals.map(g => {
+    let current = 0;
+    const yearStr = g.year.toString();
+    if (g.type === 'attendance') current = rallies.filter(r=>r.date&&r.date.startsWith(yearStr)).reduce((s,r)=>s+(r.attendance||0),0);
+    else if (g.type === 'offering') current = rallies.filter(r=>r.date&&r.date.startsWith(yearStr)).reduce((s,r)=>s+(r.offering||0),0);
+    else if (g.type === 'rallies') current = rallies.filter(r=>r.date&&r.date.startsWith(yearStr)).length;
+    const pct = g.target > 0 ? Math.min((current/g.target)*100,100) : 0;
+    const prefix = g.type === 'offering' ? '$' : '';
+    return `<div class="card">
+      <div style="display:flex;justify-content:space-between;align-items:center;">
+        <div><div style="font-weight:700;font-size:0.92rem;">${esc(g.name)}</div>
+          <div style="font-size:0.78rem;color:var(--text-muted);">${g.year} &bull; ${g.type}</div></div>
+        <button class="btn btn-sm btn-danger" onclick="deleteGoal('${g.id}')">Del</button>
+      </div>
+      <div class="goal-bar"><div class="goal-bar-fill" style="width:${pct}%"></div></div>
+      <div style="display:flex;justify-content:space-between;font-size:0.75rem;color:var(--text-muted);">
+        <span>${prefix}${g.type==='offering'?current.toFixed(2):current} of ${prefix}${g.type==='offering'?g.target.toFixed(2):g.target}</span>
+        <span style="font-weight:700;color:${pct>=100?'var(--success)':'var(--primary)'};">${pct.toFixed(1)}%</span></div></div>`;
+  }).join('');
+}
+
+function renderMission() {
+  const total = missionEntries.reduce((s,m)=>s+m.amount,0);
+  const pct = missionSettings.goal > 0 ? Math.min((total/missionSettings.goal)*100,100) : 0;
+
+  // Group by church
+  const byChurch = {};
+  missionEntries.forEach(m => {
+    const key = m.churchId || 'Other';
+    if (!byChurch[key]) byChurch[key] = 0;
+    byChurch[key] += m.amount;
+  });
+
+  let html = `
+    <div class="mission-hero">
+      <h3>${esc(missionSettings.name)} ${missionSettings.year}</h3>
+      <div class="mission-amount">$${total.toFixed(2)}</div>
+      <div class="mission-goal">of $${missionSettings.goal.toFixed(2)} goal</div>
+      <div class="mission-bar"><div class="mission-bar-fill" style="width:${pct}%"></div></div>
+      <div style="font-size:0.75rem;opacity:0.9;">${pct.toFixed(1)}% raised &bull; $${Math.max(0,missionSettings.goal-total).toFixed(2)} to go</div>
+    </div>
+    <div style="display:flex;gap:8px;margin-bottom:14px;">
+      <button class="btn btn-primary btn-sm" onclick="openModal('missionModal')">+ Add Contribution</button>
+      <button class="btn btn-outline btn-sm" onclick="openMissionSettings()">Settings</button>
+    </div>`;
+
+  // Church breakdown
+  const entries = Object.entries(byChurch).sort((a,b)=>b[1]-a[1]);
+  if (entries.length) {
+    html += '<div class="section-title">By Church / Source</div>';
+    html += entries.map(([key, amt]) => {
+      const name = key === 'Individual' || key === 'Other' ? key : getChurchName(key);
+      const cp = missionSettings.goal > 0 ? (amt/missionSettings.goal*100) : 0;
+      return `<div class="card" style="padding:12px;">
+        <div style="display:flex;justify-content:space-between;align-items:center;">
+          <span style="font-weight:600;font-size:0.88rem;">${esc(name)}</span>
+          <span style="font-weight:700;color:var(--success);">$${amt.toFixed(2)}</span></div>
+        <div class="budget-bar" style="margin-top:6px;"><div class="budget-bar-fill" style="width:${cp}%;background:var(--accent);"></div></div></div>`;
+    }).join('');
+  }
+
+  // Recent contributions
+  const recent = [...missionEntries].sort((a,b)=>b.date.localeCompare(a.date)).slice(0,10);
+  if (recent.length) {
+    html += '<div class="section-title">Recent Contributions</div>';
+    html += recent.map(m => `
+      <div class="card" style="padding:10px 14px;">
+        <div style="display:flex;justify-content:space-between;align-items:center;">
+          <div><div style="font-weight:600;font-size:0.85rem;">${esc(m.churchId?getChurchName(m.churchId):'Other')}${m.description?' &mdash; '+esc(m.description):''}</div>
+            <div style="font-size:0.72rem;color:var(--text-muted);">${formatDate(m.date)}</div></div>
+          <div style="display:flex;align-items:center;gap:8px;">
+            <span style="font-weight:700;color:var(--success);">$${m.amount.toFixed(2)}</span>
+            <button class="btn btn-sm btn-danger" onclick="deleteMissionEntry('${m.id}')" style="padding:3px 8px;">&#10005;</button></div></div></div>`).join('');
+  }
+  document.getElementById('missionContent').innerHTML = html;
+}
+
+function openMissionSettings() {
+  document.getElementById('missionYear').value = missionSettings.year;
+  document.getElementById('missionGoalAmount').value = missionSettings.goal;
+  document.getElementById('missionCampaignName').value = missionSettings.name;
+  openModal('missionSettingsModal');
+}
+
+function renderRotation() {
+  if (!rotationOrder.length) {
+    document.getElementById('rotationList').innerHTML = '<div class="empty-state"><p>No rotation set. Click "Edit Order" to set up your rally hosting rotation.</p></div>';
+    return;
+  }
+  const html = rotationOrder.map((cId, i) => {
+    const c = churches.find(x=>x.id===cId);
+    if (!c) return '';
+    const isNext = i === (rotationIdx % rotationOrder.length);
+    const isPast = i < (rotationIdx % rotationOrder.length);
+    return `<div class="rotation-item ${isNext?'next':''} ${isPast?'past':''}">
+      <div class="rotation-number">${i+1}</div>
+      <div style="flex:1;">
+        <div style="font-weight:${isNext?'700':'600'};font-size:0.88rem;">${esc(c.name)}</div>
+        ${c.pastor?`<div style="font-size:0.72rem;color:var(--text-muted);">Pastor ${esc(c.pastor)}</div>`:''}
+      </div>
+      ${isNext?'<span class="meta-tag highlight" style="font-size:0.7rem;">NEXT HOST</span>':''}
+    </div>`;
+  }).join('');
+  document.getElementById('rotationList').innerHTML = html;
+}
+
+function renderReports() {
+  // Year-over-year chart
+  const years = getYears();
+  if (years.length < 1) return;
+
+  const datasets = years.slice(-3).map((yr, idx) => {
+    const colors = ['rgba(30,58,95,0.8)', 'rgba(232,168,56,0.8)', 'rgba(46,204,113,0.8)'];
+    const months = Array.from({length:12}, (_,i) => {
+      const m = String(i+1).padStart(2,'0');
+      return rallies.filter(r=>r.date&&r.date.startsWith(yr+'-'+m)).reduce((s,r)=>s+(r.attendance||0),0);
+    });
+    return { label: yr, data: months, borderColor: colors[idx%3], backgroundColor: colors[idx%3].replace('0.8','0.1'), fill: false, tension: 0.3 };
+  });
+
+  if (charts.yoy) charts.yoy.destroy();
+  const ctx = document.getElementById('yoyChart');
+  if (ctx) {
+    charts.yoy = new Chart(ctx, {
+      type: 'line',
+      data: { labels: ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'], datasets },
+      options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { boxWidth: 12, font: { size: 11 } } } }, scales: { y: { beginAtZero: true } } }
+    });
+  }
+}
+
+// ===== REPORT GENERATION =====
+function generateReport() {
+  const from = document.getElementById('reportFrom').value;
+  const to = document.getElementById('reportTo').value;
+  const inclRallies = document.getElementById('rptRallies').checked;
+  const inclEvents = document.getElementById('rptEvents').checked;
+  const inclBudget = document.getElementById('rptBudget').checked;
+  const inclGoals = document.getElementById('rptGoals').checked;
+
+  let html = '';
+  const inRange = (d) => (!from || d >= from) && (!to || d <= to);
+
+  if (inclRallies) {
+    const rr = rallies.filter(r => inRange(r.date)).sort((a,b)=>a.date.localeCompare(b.date));
+    const totalAtt = rr.reduce((s,r)=>s+(r.attendance||0),0);
+    const totalOff = rr.reduce((s,r)=>s+(r.offering||0),0);
+    html += `<div class="card"><h3 style="font-size:1rem;font-weight:700;margin-bottom:10px;">Rally Summary</h3>
+      <p style="font-size:0.85rem;margin-bottom:6px;"><strong>Total Rallies:</strong> ${rr.length} &nbsp;|&nbsp; <strong>Total Attendance:</strong> ${totalAtt} &nbsp;|&nbsp; <strong>Avg Attendance:</strong> ${rr.length?Math.round(totalAtt/rr.length):0} &nbsp;|&nbsp; <strong>Total Offering:</strong> $${totalOff.toFixed(2)}</p>
+      <table style="width:100%;border-collapse:collapse;font-size:0.78rem;margin-top:8px;">
+        <tr style="background:var(--bg);"><th style="padding:6px;text-align:left;">Date</th><th style="text-align:left;">Rally</th><th style="text-align:left;">Preacher</th><th style="text-align:right;">Attendance</th><th style="text-align:right;">Offering</th></tr>
+        ${rr.map(r => `<tr style="border-bottom:1px solid var(--border);"><td style="padding:6px;">${formatDate(r.date)}</td><td>${esc(r.name)}</td><td>${esc(r.preacher||'-')}</td><td style="text-align:right;">${r.attendance}</td><td style="text-align:right;">$${r.offering.toFixed(2)}</td></tr>`).join('')}
+      </table></div>`;
+  }
+
+  if (inclEvents) {
+    const ee = events.filter(e => inRange(e.date)).sort((a,b)=>a.date.localeCompare(b.date));
+    html += `<div class="card"><h3 style="font-size:1rem;font-weight:700;margin-bottom:10px;">Events (${ee.length})</h3>
+      ${ee.map(e => `<div style="padding:6px 0;border-bottom:1px solid var(--border);font-size:0.82rem;"><strong>${esc(e.name)}</strong> &mdash; ${formatDate(e.date)}${e.endDate?' to '+formatDate(e.endDate):''}${e.location?' &bull; '+esc(e.location):''}</div>`).join('')}</div>`;
+  }
+
+  if (inclBudget) {
+    const bb = budgetEntries.filter(b => inRange(b.date)).sort((a,b)=>a.date.localeCompare(b.date));
+    const inc = bb.filter(b=>b.type==='income').reduce((s,b)=>s+b.amount,0);
+    const exp = bb.filter(b=>b.type==='expense').reduce((s,b)=>s+b.amount,0);
+    html += `<div class="card"><h3 style="font-size:1rem;font-weight:700;margin-bottom:10px;">Budget Summary</h3>
+      <p style="font-size:0.85rem;margin-bottom:8px;"><strong>Income:</strong> $${inc.toFixed(2)} &nbsp;|&nbsp; <strong>Expenses:</strong> $${exp.toFixed(2)} &nbsp;|&nbsp; <strong>Net:</strong> $${(inc-exp).toFixed(2)}</p>
+      <table style="width:100%;border-collapse:collapse;font-size:0.78rem;">
+        <tr style="background:var(--bg);"><th style="padding:6px;text-align:left;">Date</th><th style="text-align:left;">Type</th><th style="text-align:left;">Category</th><th style="text-align:left;">Description</th><th style="text-align:right;">Amount</th></tr>
+        ${bb.map(b => `<tr style="border-bottom:1px solid var(--border);"><td style="padding:6px;">${formatDate(b.date)}</td><td>${b.type}</td><td>${esc(b.category)}</td><td>${esc(b.description)}</td><td style="text-align:right;color:${b.type==='income'?'var(--success)':'var(--danger)'};">${b.type==='income'?'+':'-'}$${b.amount.toFixed(2)}</td></tr>`).join('')}
+      </table></div>`;
+  }
+
+  if (inclGoals) {
+    const mTotal = missionEntries.reduce((s,m)=>s+m.amount,0);
+    html += `<div class="card"><h3 style="font-size:1rem;font-weight:700;margin-bottom:10px;">${esc(missionSettings.name)} ${missionSettings.year}</h3>
+      <p style="font-size:0.85rem;"><strong>Raised:</strong> $${mTotal.toFixed(2)} of $${missionSettings.goal.toFixed(2)} (${missionSettings.goal>0?(mTotal/missionSettings.goal*100).toFixed(1):0}%)</p></div>`;
+  }
+
+  document.getElementById('printDateRange').textContent = `Report: ${from ? formatDate(from) : 'All time'} ${to ? '— ' + formatDate(to) : ''}`;
+  document.getElementById('printContent').innerHTML = html;
+
+  // Switch to print page and trigger print
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active','print-target'));
+  document.getElementById('page-print').classList.add('active','print-target');
+  setTimeout(() => { window.print(); showPage('reports'); }, 300);
+}
+
+// ===== FLYER FUNCTIONS =====
+function populateFlyerLinks() {
+  const rg = document.getElementById('flyerLinkRallies');
+  const eg = document.getElementById('flyerLinkEvents');
+  rg.innerHTML = rallies.sort((a,b)=>b.date.localeCompare(a.date)).map(r => `<option value="rally:${r.id}">${esc(r.name)} (${formatDate(r.date)})</option>`).join('');
+  eg.innerHTML = events.sort((a,b)=>b.date.localeCompare(a.date)).map(e => `<option value="event:${e.id}">${esc(e.name)} (${formatDate(e.date)})</option>`).join('');
+}
+
+function saveFlyer(e) {
+  e.preventDefault();
+  const fileInput = document.getElementById('flyerImage');
+  const editId = document.getElementById('flyerEditId').value;
+
+  function finish(imageData) {
+    const link = document.getElementById('flyerLink').value;
+    const flyer = {
+      id: editId || Date.now().toString(),
+      title: document.getElementById('flyerTitle').value,
+      date: document.getElementById('flyerDate').value,
+      linkedTo: link,
+      image: imageData
+    };
+    if (editId) { const i = flyers.findIndex(f=>f.id===editId); if(i>=0) flyers[i]=flyer; }
+    else flyers.push(flyer);
+    save(KEYS.flyers, flyers);
+    closeModal('flyerModal');
+    renderAll();
+  }
+
+  if (fileInput.files.length > 0) {
+    const reader = new FileReader();
+    reader.onload = ev => {
+      const img = new Image();
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        const max = 600;
+        let w = img.width, h = img.height;
+        if (w > max || h > max) { const r = Math.min(max/w, max/h); w *= r; h *= r; }
+        canvas.width = w; canvas.height = h;
+        canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+        finish(canvas.toDataURL('image/jpeg', 0.6));
+      };
+      img.src = ev.target.result;
+    };
+    reader.readAsDataURL(fileInput.files[0]);
+  } else if (editId) {
+    const existing = flyers.find(f=>f.id===editId);
+    finish(existing ? existing.image : '');
+  }
+}
+
+function deleteFlyer(id) { if(!confirm('Delete this flyer?')) return; flyers=flyers.filter(f=>f.id!==id); save(KEYS.flyers,flyers); renderAll(); }
+
+function viewFlyer(id) {
+  const f = flyers.find(x=>x.id===id); if(!f) return;
+  const w = window.open('','_blank','width=700,height=800');
+  w.document.write(`<html><head><title>${f.title}</title></head><body style="margin:0;display:flex;align-items:center;justify-content:center;background:#000;"><img src="${f.image}" style="max-width:100%;max-height:100vh;"></body></html>`);
+}
+
+function renderFlyers() {
+  if (!flyers.length) {
+    document.getElementById('flyerList').innerHTML = '<div class="empty-state"><p>No flyers yet. Upload your first one!</p></div>';
+    return;
+  }
+  const sorted = [...flyers].sort((a,b)=>b.date.localeCompare(a.date));
+  document.getElementById('flyerList').innerHTML = '<div class="flyer-grid">' + sorted.map(f => {
+    let linkedName = '';
+    if (f.linkedTo) {
+      const [type, id] = f.linkedTo.split(':');
+      if (type === 'rally') { const r = rallies.find(x=>x.id===id); linkedName = r ? r.name : ''; }
+      if (type === 'event') { const e = events.find(x=>x.id===id); linkedName = e ? e.name : ''; }
+    }
+    return `<div class="flyer-card" onclick="viewFlyer('${f.id}')">
+      <img src="${f.image}" alt="${esc(f.title)}">
+      <div class="flyer-info">
+        <div class="flyer-title">${esc(f.title)}</div>
+        <div class="flyer-date">${formatDate(f.date)}${linkedName ? ' &bull; '+esc(linkedName) : ''}</div>
+        <button class="btn btn-sm btn-danger" style="margin-top:6px;" onclick="event.stopPropagation();deleteFlyer('${f.id}')">Delete</button>
+      </div>
+    </div>`;
+  }).join('') + '</div>';
+}
+
+// ===== CONTACT FUNCTIONS =====
+function populateContactChurchDropdown() {
+  const sel = document.getElementById('contactChurch');
+  const val = sel.value;
+  sel.innerHTML = '<option value="">None</option>' + churches.map(c => `<option value="${c.id}">${esc(c.name)}</option>`).join('');
+  sel.value = val;
+}
+
+function saveContact(e) {
+  e.preventDefault();
+  const editId = document.getElementById('contactEditId').value;
+  const contact = {
+    id: editId || Date.now().toString(),
+    name: document.getElementById('contactName').value,
+    role: document.getElementById('contactRole').value,
+    churchId: document.getElementById('contactChurch').value,
+    phone: document.getElementById('contactPhone').value,
+    email: document.getElementById('contactEmail').value,
+    notes: document.getElementById('contactNotes').value
+  };
+  if (editId) { const i = contacts.findIndex(c=>c.id===editId); if(i>=0) contacts[i]=contact; }
+  else contacts.push(contact);
+  save(KEYS.contacts, contacts);
+  closeModal('contactModal');
+  renderAll();
+}
+
+function editContact(id) {
+  const c = contacts.find(x=>x.id===id); if(!c) return;
+  document.getElementById('contactEditId').value = c.id;
+  document.getElementById('contactName').value = c.name;
+  document.getElementById('contactRole').value = c.role || 'Youth Leader';
+  document.getElementById('contactPhone').value = c.phone || '';
+  document.getElementById('contactEmail').value = c.email || '';
+  document.getElementById('contactNotes').value = c.notes || '';
+  populateContactChurchDropdown();
+  document.getElementById('contactChurch').value = c.churchId || '';
+  document.getElementById('contactModalTitle').textContent = 'Edit Contact';
+  openModal('contactModal');
+}
+
+function deleteContact(id) { if(!confirm('Delete?')) return; contacts=contacts.filter(c=>c.id!==id); save(KEYS.contacts,contacts); renderAll(); }
+
+function renderContacts() {
+  const q = (document.getElementById('contactSearch')?.value||'').toLowerCase();
+
+  // Build combined list: manual contacts + auto from churches
+  let allContacts = [...contacts];
+
+  // Auto-generate contacts from churches that have youth leaders
+  churches.forEach(ch => {
+    if (ch.youthLeader && !contacts.some(c => c.churchId === ch.id && c.name === ch.youthLeader)) {
+      allContacts.push({
+        id: 'auto_yl_' + ch.id, name: ch.youthLeader, role: 'Youth Leader',
+        churchId: ch.id, phone: ch.phone || '', email: ch.email || '', auto: true
+      });
+    }
+    if (ch.pastor && !contacts.some(c => c.churchId === ch.id && c.name === ch.pastor)) {
+      allContacts.push({
+        id: 'auto_p_' + ch.id, name: ch.pastor, role: 'Pastor',
+        churchId: ch.id, phone: ch.phone || '', email: ch.email || '', auto: true
+      });
+    }
+  });
+
+  // Deduplicate by name
+  const seen = new Set();
+  allContacts = allContacts.filter(c => {
+    const key = c.name.toLowerCase();
+    if (seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  });
+
+  if (q) allContacts = allContacts.filter(c =>
+    (c.name||'').toLowerCase().includes(q) || (c.role||'').toLowerCase().includes(q) ||
+    (c.churchId ? getChurchName(c.churchId) : '').toLowerCase().includes(q)
+  );
+
+  allContacts.sort((a,b) => a.name.localeCompare(b.name));
+
+  if (!allContacts.length) {
+    document.getElementById('contactList').innerHTML = '<div class="empty-state"><p>No contacts yet. Add contacts or youth leaders in the church directory.</p></div>';
+    return;
+  }
+
+  document.getElementById('contactList').innerHTML = allContacts.map(c => {
+    const initials = c.name.split(' ').map(w=>w[0]).join('').substring(0,2).toUpperCase();
+    const avatarClass = c.role === 'Youth Leader' ? 'yl' : c.role === 'Pastor' ? 'pastor' : 'other';
+    const churchName = c.churchId ? getChurchName(c.churchId) : '';
+    return `<div class="card contact-card">
+      <div class="contact-avatar ${avatarClass}">${initials}</div>
+      <div style="flex:1;min-width:0;">
+        <div style="display:flex;align-items:center;gap:6px;">
+          <span style="font-weight:700;font-size:0.88rem;">${esc(c.name)}</span>
+          ${c.auto ? '<span class="meta-tag" style="font-size:0.55rem;">From Directory</span>' : ''}
+        </div>
+        <div style="font-size:0.75rem;color:var(--text-muted);">${esc(c.role||'')}${churchName ? ' &bull; '+esc(churchName) : ''}</div>
+      </div>
+      <div class="contact-actions">
+        ${c.phone ? `<a href="tel:${c.phone}" class="phone-btn" title="Call" onclick="event.stopPropagation()">&#128222;</a>` : ''}
+        ${c.email ? `<a href="mailto:${c.email}" class="email-btn" title="Email" onclick="event.stopPropagation()">&#9993;</a>` : ''}
+        ${!c.auto ? `<button class="btn btn-sm btn-outline" style="padding:4px 8px;" onclick="editContact('${c.id}')">Edit</button>` : ''}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ===== NOTE FUNCTIONS =====
+function openNoteModal(id) {
+  if (id) {
+    const n = notes.find(x=>x.id===id); if(!n) return;
+    document.getElementById('noteEditId').value = n.id;
+    document.getElementById('noteTitle').value = n.title;
+    document.getElementById('noteContent').value = n.content;
+    document.querySelectorAll('.noteTagCheck').forEach(cb => { cb.checked = (n.tags||[]).includes(cb.value); });
+    document.getElementById('noteModalTitle').textContent = 'Edit Note';
+  } else {
+    document.getElementById('noteEditId').value = '';
+    document.getElementById('noteModalTitle').textContent = 'New Note';
+  }
+  openModal('noteModal');
+}
+
+function saveNote(e) {
+  e.preventDefault();
+  const editId = document.getElementById('noteEditId').value;
+  const tags = Array.from(document.querySelectorAll('.noteTagCheck:checked')).map(cb => cb.value);
+  const now = new Date().toISOString();
+  const note = {
+    id: editId || Date.now().toString(),
+    title: document.getElementById('noteTitle').value,
+    content: document.getElementById('noteContent').value,
+    tags,
+    createdAt: editId ? (notes.find(n=>n.id===editId)?.createdAt || now) : now,
+    updatedAt: now
+  };
+  if (editId) { const i = notes.findIndex(n=>n.id===editId); if(i>=0) notes[i]=note; }
+  else notes.push(note);
+  save(KEYS.notes, notes);
+  closeModal('noteModal');
+  renderAll();
+}
+
+function deleteNote(id) { if(!confirm('Delete this note?')) return; notes=notes.filter(n=>n.id!==id); save(KEYS.notes,notes); renderAll(); }
+
+function setNoteFilter(filter, btn) {
+  noteFilter = filter;
+  document.querySelectorAll('#page-notes .tab-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  renderNotes();
+}
+
+function renderNotes() {
+  const q = (document.getElementById('noteSearch')?.value||'').toLowerCase();
+  let filtered = [...notes];
+  if (noteFilter !== 'all') filtered = filtered.filter(n => (n.tags||[]).includes(noteFilter));
+  if (q) filtered = filtered.filter(n => (n.title||'').toLowerCase().includes(q) || (n.content||'').toLowerCase().includes(q));
+  filtered.sort((a,b) => (b.updatedAt||b.createdAt||'').localeCompare(a.updatedAt||a.createdAt||''));
+
+  if (!filtered.length) {
+    document.getElementById('noteList').innerHTML = '<div class="empty-state"><p>No notes yet. Jot something down!</p></div>';
+    return;
+  }
+
+  document.getElementById('noteList').innerHTML = filtered.map(n => {
+    const preview = (n.content||'').substring(0, 120);
+    const dateStr = n.updatedAt ? new Date(n.updatedAt).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}) : '';
+    return `<div class="card note-card" onclick="openNoteModal('${n.id}')">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;">
+        <div style="flex:1;min-width:0;">
+          <div style="font-weight:700;font-size:0.92rem;">${esc(n.title)}</div>
+          <div class="note-preview">${esc(preview)}</div>
+          <div style="display:flex;align-items:center;gap:8px;margin-top:6px;">
+            <span style="font-size:0.7rem;color:var(--text-muted);">${dateStr}</span>
+            ${(n.tags||[]).length ? '<div class="note-tags">' + n.tags.map(t=>`<span class="note-tag">${esc(t)}</span>`).join('') + '</div>' : ''}
+          </div>
+        </div>
+        <button class="btn btn-sm btn-danger" style="flex-shrink:0;margin-left:8px;" onclick="event.stopPropagation();deleteNote('${n.id}')">Del</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ===== MERCH FUNCTIONS =====
+const SIZES = ['XS','S','M','L','XL','2XL','3XL'];
+
+function toggleSizeFields() {
+  const hasSizes = document.getElementById('merchHasSizes').value === 'yes';
+  document.getElementById('merchSizeFields').style.display = hasSizes ? 'block' : 'none';
+  document.getElementById('merchNoSizeQty').style.display = hasSizes ? 'none' : 'block';
+}
+
+function getMerchTotalQty(item) {
+  if (item.hasSizes) {
+    return SIZES.reduce((s, sz) => s + (item.sizes[sz] || 0), 0);
+  }
+  return item.qty || 0;
+}
+
+function saveMerchItem(e) {
+  e.preventDefault();
+  const editId = document.getElementById('merchEditId').value;
+  const hasSizes = document.getElementById('merchHasSizes').value === 'yes';
+  const photoInput = document.getElementById('merchPhoto');
+  const existingPhoto = editId ? (merchItems.find(m=>m.id===editId)?.photo || '') : '';
+
+  const item = {
+    id: editId || Date.now().toString(),
+    name: document.getElementById('merchName').value,
+    category: document.getElementById('merchCategory').value,
+    hasSizes,
+    qty: hasSizes ? 0 : (parseInt(document.getElementById('merchQty').value) || 0),
+    sizes: hasSizes ? {
+      XS: parseInt(document.getElementById('merchXS').value) || 0,
+      S: parseInt(document.getElementById('merchS').value) || 0,
+      M: parseInt(document.getElementById('merchM').value) || 0,
+      L: parseInt(document.getElementById('merchL').value) || 0,
+      XL: parseInt(document.getElementById('merchXL').value) || 0,
+      '2XL': parseInt(document.getElementById('merch2XL').value) || 0,
+      '3XL': parseInt(document.getElementById('merch3XL').value) || 0
+    } : {},
+    costPrice: parseFloat(document.getElementById('merchCost').value) || 0,
+    sellPrice: parseFloat(document.getElementById('merchPrice').value) || 0,
+    lowAlert: parseInt(document.getElementById('merchLowAlert').value) || 5,
+    notes: document.getElementById('merchNotes').value,
+    photo: existingPhoto
+  };
+
+  if (photoInput.files.length > 0) {
+    const reader = new FileReader();
+    reader.onload = ev => {
+      const img = new Image();
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        const max = 400;
+        let w = img.width, h = img.height;
+        if (w > max || h > max) { const r = Math.min(max/w, max/h); w *= r; h *= r; }
+        canvas.width = w; canvas.height = h;
+        canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+        item.photo = canvas.toDataURL('image/jpeg', 0.6);
+        finishSaveMerch(item, editId);
+      };
+      img.src = ev.target.result;
+    };
+    reader.readAsDataURL(photoInput.files[0]);
+  } else {
+    finishSaveMerch(item, editId);
+  }
+}
+
+function finishSaveMerch(item, editId) {
+  if (editId) { const i = merchItems.findIndex(m=>m.id===editId); if(i>=0) merchItems[i]=item; }
+  else merchItems.push(item);
+  save(KEYS.merchItems, merchItems);
+  closeModal('merchModal');
+  renderAll();
+}
+
+function editMerchItem(id) {
+  const m = merchItems.find(x=>x.id===id); if(!m) return;
+  document.getElementById('merchEditId').value = m.id;
+  document.getElementById('merchName').value = m.name;
+  document.getElementById('merchCategory').value = m.category || 'Other';
+  document.getElementById('merchHasSizes').value = m.hasSizes ? 'yes' : 'no';
+  toggleSizeFields();
+  if (m.hasSizes && m.sizes) {
+    SIZES.forEach(sz => {
+      const el = document.getElementById('merch' + sz.replace('2XL','2XL').replace('3XL','3XL'));
+      if (el) el.value = m.sizes[sz] || 0;
+    });
+    document.getElementById('merchXS').value = m.sizes.XS || 0;
+    document.getElementById('merchS').value = m.sizes.S || 0;
+    document.getElementById('merchM').value = m.sizes.M || 0;
+    document.getElementById('merchL').value = m.sizes.L || 0;
+    document.getElementById('merchXL').value = m.sizes.XL || 0;
+    document.getElementById('merch2XL').value = m.sizes['2XL'] || 0;
+    document.getElementById('merch3XL').value = m.sizes['3XL'] || 0;
+  } else {
+    document.getElementById('merchQty').value = m.qty || 0;
+  }
+  document.getElementById('merchCost').value = m.costPrice || '';
+  document.getElementById('merchPrice').value = m.sellPrice || '';
+  document.getElementById('merchLowAlert').value = m.lowAlert || 5;
+  document.getElementById('merchNotes').value = m.notes || '';
+  if (m.photo) {
+    document.getElementById('merchPhotoPreview').innerHTML = `<img src="${m.photo}" style="max-width:120px;max-height:120px;border-radius:8px;border:2px solid var(--border);">`;
+  }
+  document.getElementById('merchModalTitle').textContent = 'Edit Merch Item';
+  openModal('merchModal');
+}
+
+function deleteMerchItem(id) {
+  if (!confirm('Delete this item and all its sales records?')) return;
+  merchItems = merchItems.filter(m=>m.id!==id);
+  merchSales = merchSales.filter(s=>s.itemId!==id);
+  save(KEYS.merchItems, merchItems);
+  save(KEYS.merchSales, merchSales);
+  renderAll();
+}
+
+function openStockAdjust(id) {
+  const item = merchItems.find(m=>m.id===id); if(!item) return;
+  document.getElementById('stockItemId').value = id;
+  document.getElementById('stockSizeField').style.display = item.hasSizes ? 'block' : 'none';
+  openModal('stockModal');
+}
+
+function saveStockAdjust(e) {
+  e.preventDefault();
+  const itemId = document.getElementById('stockItemId').value;
+  const item = merchItems.find(m=>m.id===itemId); if(!item) return;
+  const type = document.getElementById('stockType').value;
+  const qty = parseInt(document.getElementById('stockQty').value) || 0;
+  const size = document.getElementById('stockSize').value;
+
+  if (item.hasSizes) {
+    if (!item.sizes) item.sizes = {};
+    if (type === 'add') item.sizes[size] = (item.sizes[size] || 0) + qty;
+    else item.sizes[size] = Math.max(0, (item.sizes[size] || 0) - qty);
+  } else {
+    if (type === 'add') item.qty = (item.qty || 0) + qty;
+    else item.qty = Math.max(0, (item.qty || 0) - qty);
+  }
+  save(KEYS.merchItems, merchItems);
+  closeModal('stockModal');
+  renderAll();
+}
+
+function populateSaleItems() {
+  const sel = document.getElementById('saleItem');
+  sel.innerHTML = '<option value="">Select item...</option>' + merchItems.map(m =>
+    `<option value="${m.id}">${esc(m.name)} (${getMerchTotalQty(m)} in stock)</option>`
+  ).join('');
+  document.getElementById('saleDate').value = new Date().toISOString().slice(0,10);
+  updateSaleSizes();
+}
+
+function updateSaleSizes() {
+  const itemId = document.getElementById('saleItem').value;
+  const item = merchItems.find(m=>m.id===itemId);
+  document.getElementById('saleSizeField').style.display = (item && item.hasSizes) ? 'block' : 'none';
+  if (item) {
+    document.getElementById('salePrice').value = item.sellPrice || '';
+    const total = getMerchTotalQty(item);
+    document.getElementById('saleStockInfo').textContent = `Current stock: ${total} units`;
+  } else {
+    document.getElementById('saleStockInfo').textContent = '';
+  }
+}
+
+function saveSale(e) {
+  e.preventDefault();
+  const itemId = document.getElementById('saleItem').value;
+  const item = merchItems.find(m=>m.id===itemId); if(!item) return;
+  const qty = parseInt(document.getElementById('saleQty').value) || 1;
+  const size = item.hasSizes ? document.getElementById('saleSize').value : '';
+
+  // Deduct stock
+  if (item.hasSizes) {
+    if (!item.sizes) item.sizes = {};
+    item.sizes[size] = Math.max(0, (item.sizes[size] || 0) - qty);
+  } else {
+    item.qty = Math.max(0, (item.qty || 0) - qty);
+  }
+
+  const sale = {
+    id: Date.now().toString(),
+    itemId,
+    size,
+    qty,
+    price: parseFloat(document.getElementById('salePrice').value) || 0,
+    date: document.getElementById('saleDate').value,
+    location: document.getElementById('saleLocation').value
+  };
+  merchSales.push(sale);
+  save(KEYS.merchItems, merchItems);
+  save(KEYS.merchSales, merchSales);
+  closeModal('saleModal');
+  renderAll();
+}
+
+function deleteSale(id) {
+  if (!confirm('Delete this sale? (Stock will NOT be restored automatically)')) return;
+  merchSales = merchSales.filter(s=>s.id!==id);
+  save(KEYS.merchSales, merchSales);
+  renderAll();
+}
+
+function setMerchTab(tab, btn) {
+  merchTab = tab;
+  document.querySelectorAll('#page-merch .tab-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('merchTabInventory').style.display = tab==='inventory'?'block':'none';
+  document.getElementById('merchTabSales').style.display = tab==='sales'?'block':'none';
+  document.getElementById('merchTabSummary').style.display = tab==='summary'?'block':'none';
+}
+
+function renderMerch() {
+  renderMerchInventory();
+  renderMerchSales();
+  renderMerchSummary();
+}
+
+function renderMerchInventory() {
+  // Low stock alerts
+  const lowItems = merchItems.filter(m => getMerchTotalQty(m) <= (m.lowAlert || 5) && getMerchTotalQty(m) > 0);
+  const outItems = merchItems.filter(m => getMerchTotalQty(m) === 0);
+  let alertHtml = '';
+  if (outItems.length) {
+    alertHtml += `<div class="low-stock-alert" style="border-color:var(--danger);background:#fff5f5;">
+      <span style="font-size:1.1rem;">&#9888;</span>
+      <span><strong>Out of stock:</strong> ${outItems.map(m=>esc(m.name)).join(', ')}</span>
+    </div>`;
+  }
+  if (lowItems.length) {
+    alertHtml += `<div class="low-stock-alert">
+      <span style="font-size:1.1rem;">&#9888;</span>
+      <span><strong>Low stock:</strong> ${lowItems.map(m=>esc(m.name)+' ('+getMerchTotalQty(m)+')').join(', ')}</span>
+    </div>`;
+  }
+  document.getElementById('merchLowStock').innerHTML = alertHtml;
+
+  if (!merchItems.length) {
+    document.getElementById('merchList').innerHTML = '<div class="empty-state"><p>No merch items yet. Add your first one!</p></div>';
+    return;
+  }
+
+  document.getElementById('merchList').innerHTML = merchItems.map(m => {
+    const total = getMerchTotalQty(m);
+    const isLow = total > 0 && total <= (m.lowAlert || 5);
+    const isOut = total === 0;
+    return `<div class="card" style="padding:14px;">
+      <div style="display:flex;gap:12px;align-items:flex-start;margin-bottom:6px;">
+        ${m.photo ? '<img src="'+m.photo+'" style="width:60px;height:60px;border-radius:8px;object-fit:cover;flex-shrink:0;" alt="'+esc(m.name)+'">' : ''}
+        <div style="flex:1;min-width:0;">
+          <div style="font-weight:700;font-size:0.92rem;">${esc(m.name)}</div>
+          <div style="font-size:0.72rem;color:var(--text-muted);">${esc(m.category)}${m.costPrice?' &bull; Cost: $'+m.costPrice.toFixed(2):''}${m.sellPrice?' &bull; Sell: $'+m.sellPrice.toFixed(2):''}</div>
+        </div>
+        <div style="text-align:right;flex-shrink:0;">
+          <div style="font-size:1.2rem;font-weight:800;color:${isOut?'var(--danger)':isLow?'var(--warning)':'var(--success)'};">${total}</div>
+          <div style="font-size:0.6rem;color:var(--text-muted);font-weight:600;">IN STOCK</div>
+        </div>
+      </div>
+      ${m.hasSizes ? `<div class="size-grid">${SIZES.map(sz => {
+        const q = (m.sizes && m.sizes[sz]) || 0;
+        const cls = q === 0 ? 'out' : q <= 3 ? 'low' : 'in-stock';
+        return `<span class="size-pill ${cls}">${sz}: ${q}</span>`;
+      }).join('')}</div>` : ''}
+      ${m.notes ? `<div style="font-size:0.75rem;color:var(--text-muted);margin-top:6px;">${esc(m.notes)}</div>` : ''}
+      <div style="display:flex;gap:6px;margin-top:8px;">
+        <button type="button" class="btn btn-sm btn-success" onclick="event.stopPropagation();openStockAdjust('${m.id}')">Adjust Stock</button>
+        <button type="button" class="btn btn-sm btn-outline" onclick="event.stopPropagation();editMerchItem('${m.id}')">Edit</button>
+        <button type="button" class="btn btn-sm btn-danger" onclick="event.stopPropagation();deleteMerchItem('${m.id}')">Delete</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function renderMerchSales() {
+  const sorted = [...merchSales].sort((a,b) => b.date.localeCompare(a.date));
+  if (!sorted.length) {
+    document.getElementById('salesList').innerHTML = '<div class="empty-state"><p>No sales logged yet</p></div>';
+    return;
+  }
+  document.getElementById('salesList').innerHTML = sorted.map(s => {
+    const item = merchItems.find(m=>m.id===s.itemId);
+    const name = item ? item.name : 'Unknown Item';
+    const total = s.qty * s.price;
+    return `<div class="card" style="padding:12px;">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;">
+        <div>
+          <div style="font-weight:700;font-size:0.88rem;">${esc(name)}${s.size ? ' ('+s.size+')' : ''}</div>
+          <div style="font-size:0.72rem;color:var(--text-muted);">${formatDate(s.date)}${s.location ? ' &bull; '+esc(s.location) : ''} &bull; Qty: ${s.qty} &times; $${s.price.toFixed(2)}</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;">
+          <span style="font-weight:700;color:var(--success);font-size:0.95rem;">$${total.toFixed(2)}</span>
+          <button type="button" class="btn btn-sm btn-danger" style="padding:3px 8px;" onclick="event.stopPropagation();deleteSale('${s.id}')">&#10005;</button>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function renderMerchSummary() {
+  const totalRevenue = merchSales.reduce((s,x) => s + (x.qty * x.price), 0);
+  const totalCost = merchSales.reduce((s,x) => {
+    const item = merchItems.find(m=>m.id===x.itemId);
+    return s + (x.qty * (item ? item.costPrice || 0 : 0));
+  }, 0);
+  const totalProfit = totalRevenue - totalCost;
+  const totalUnits = merchSales.reduce((s,x) => s + x.qty, 0);
+  const totalInventory = merchItems.reduce((s,m) => s + getMerchTotalQty(m), 0);
+
+  document.getElementById('merchStats').innerHTML = `
+    <div class="stat-card success"><div class="stat-value">$${totalRevenue.toFixed(0)}</div><div class="stat-label">Revenue</div></div>
+    <div class="stat-card"><div class="stat-value" style="color:${totalProfit>=0?'var(--success)':'var(--danger)'}">$${totalProfit.toFixed(0)}</div><div class="stat-label">Profit</div></div>
+    <div class="stat-card"><div class="stat-value">${totalUnits}</div><div class="stat-label">Units Sold</div></div>
+    <div class="stat-card accent"><div class="stat-value">${totalInventory}</div><div class="stat-label">In Stock</div></div>`;
+
+  // Profit by item
+  const byItem = {};
+  merchSales.forEach(s => {
+    if (!byItem[s.itemId]) byItem[s.itemId] = { revenue: 0, cost: 0, sold: 0 };
+    const item = merchItems.find(m=>m.id===s.itemId);
+    byItem[s.itemId].revenue += s.qty * s.price;
+    byItem[s.itemId].cost += s.qty * (item ? item.costPrice || 0 : 0);
+    byItem[s.itemId].sold += s.qty;
+  });
+
+  const maxRev = Math.max(...Object.values(byItem).map(v=>v.revenue), 1);
+  const profitHtml = Object.entries(byItem).map(([itemId, data]) => {
+    const item = merchItems.find(m=>m.id===itemId);
+    const name = item ? item.name : 'Unknown';
+    const profit = data.revenue - data.cost;
+    const pct = (data.revenue / maxRev) * 100;
+    return `<div style="padding:8px 0;border-bottom:1px solid var(--border);">
+      <div style="display:flex;justify-content:space-between;align-items:center;">
+        <div><span style="font-weight:600;font-size:0.85rem;">${esc(name)}</span>
+          <span style="font-size:0.7rem;color:var(--text-muted);margin-left:6px;">${data.sold} sold</span></div>
+        <div style="text-align:right;">
+          <div style="font-size:0.82rem;font-weight:700;color:var(--success);">$${data.revenue.toFixed(2)}</div>
+          <div style="font-size:0.65rem;color:${profit>=0?'var(--success)':'var(--danger)'};">Profit: $${profit.toFixed(2)}</div>
+        </div>
+      </div>
+      <div class="profit-bar"><div class="profit-bar-fill" style="width:${pct}%"></div></div>
+    </div>`;
+  }).join('');
+
+  document.getElementById('merchProfitList').innerHTML = profitHtml || '<div class="empty-state"><p>No sales data yet</p></div>';
+}
+
+// ===== NOTIFICATIONS =====
+function requestNotifications() {
+  if ('Notification' in window) {
+    Notification.requestPermission().then(p => {
+      if (p === 'granted') { alert('Reminders enabled! You\'ll get notifications for upcoming events.'); checkReminders(); }
+      else alert('Notifications were not enabled. You can enable them in browser settings.');
+    });
+  } else { alert('Notifications not supported in this browser.'); }
+}
+
+function checkReminders() {
+  if (!('Notification' in window) || Notification.permission !== 'granted') return;
+  events.forEach(e => {
+    const days = daysUntil(e.date);
+    if (days >= 0 && days <= (e.reminder || 7) && days <= 1) {
+      const label = days === 0 ? 'TODAY' : 'TOMORROW';
+      new Notification(`${e.name} is ${label}!`, { body: e.location || '', icon: 'icon-192.png' });
+    }
+  });
+}
+
+// ===== EXPORT / IMPORT =====
+function exportData() {
+  const data = { rallies, events, budgetEntries, churches, goals, missionEntries, missionSettings, rotationOrder, rotationIdx, flyers, contacts, notes, merchItems, merchSales, docs, team, exported: new Date().toISOString() };
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `section6-backup-${new Date().toISOString().slice(0,10)}.json`;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+function importData(file) {
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    try {
+      const data = JSON.parse(e.target.result);
+      if (data.rallies) { rallies = data.rallies; save(KEYS.rallies, rallies); }
+      if (data.events) { events = data.events; save(KEYS.events, events); }
+      if (data.budgetEntries) { budgetEntries = data.budgetEntries; save(KEYS.budget, budgetEntries); }
+      if (data.churches) { churches = data.churches; save(KEYS.churches, churches); }
+      if (data.goals) { goals = data.goals; save(KEYS.goals, goals); }
+      if (data.missionEntries) { missionEntries = data.missionEntries; save(KEYS.mission, missionEntries); }
+      if (data.missionSettings) { missionSettings = data.missionSettings; save(KEYS.missionSettings, missionSettings); }
+      if (data.rotationOrder) { rotationOrder = data.rotationOrder; save(KEYS.rotation, rotationOrder); }
+      if (data.rotationIdx !== undefined) { rotationIdx = data.rotationIdx; localStorage.setItem(KEYS.rotationIdx, rotationIdx); }
+      if (data.flyers) { flyers = data.flyers; save(KEYS.flyers, flyers); }
+      if (data.contacts) { contacts = data.contacts; save(KEYS.contacts, contacts); }
+      if (data.notes) { notes = data.notes; save(KEYS.notes, notes); }
+      if (data.merchItems) { merchItems = data.merchItems; save(KEYS.merchItems, merchItems); }
+      if (data.merchSales) { merchSales = data.merchSales; save(KEYS.merchSales, merchSales); }
+      if (data.docs) { docs = data.docs; save(KEYS.docs, docs); }
+      if (data.team) { team = data.team; save(KEYS.team, team); }
+      renderAll();
+      alert('Data imported successfully!');
+    } catch { alert('Error reading file.'); }
+  };
+  reader.readAsText(file);
+}
+
+// ===== SEED DATA =====
+if (churches.length === 0) {
+  const seedChurches = [
+    { name: "Belzoni UPC", pastor: "Kenneth Scott" },
+    { name: "Brandon First UPC", pastor: "Kenneth Irby" },
+    { name: "Byram Apostolic Faith", pastor: "Lanse Foster" },
+    { name: "Canton Apostolic Lighthouse", pastor: "Donnie Grantham" },
+    { name: "Clinton Faith First", pastor: "Derrick Townsend" },
+    { name: "Delta Revival Center", pastor: "Duane Keith" },
+    { name: "Florence Jesus Name Tabernacle", pastor: "Max Smith" },
+    { name: "Flowood First Pentecostal Church", pastor: "Bill Chatham" },
+    { name: "Greenville UPC", pastor: "Chase Oltremari" },
+    { name: "Greenville", pastor: "Charles Fisher" },
+    { name: "Jackson Adapt Church", pastor: "Rico Smith" },
+    { name: "Jackson First Pentecostal Church", pastor: "Greg Frazier" },
+    { name: "Jackson Grace Temple", pastor: "Braxton Stevenson" },
+    { name: "Jackson New Life Apostolic", pastor: "Kenneth Scott" },
+    { name: "Jackson New Life UPC", pastor: "Page Frazier" },
+    { name: "Madison Parkway Pentecostal", pastor: "Jason Dillon" },
+    { name: "Magee Apostolic Tabernacle UPC", pastor: "Gary Meadows" },
+    { name: "Mendenhall First Pentecostal Church", pastor: "Jessie Swilley" },
+    { name: "Morton UPC", pastor: "Nathan Morales" },
+    { name: "Pearl UPC Eastflow", pastor: "Darren Givens" },
+    { name: "Pelahatchie First Apostolic Church", pastor: "Jerry Hamilton" },
+    { name: "Polkville Pentecostal Church", pastor: "Jeremy Price" },
+    { name: "Port Gibson New Beginnings", pastor: "Lloyd Simmons" },
+    { name: "Raymond First UPC", pastor: "Dennis M. Davis" },
+    { name: "Richland UPC New Destiny", pastor: "L. Britt Prince, II" },
+    { name: "Richland UPC New Destiny/Deaf Church", pastor: "Meloy Richmond" },
+    { name: "Ridgeland Parkway Church", pastor: "Erik Garcia" },
+    { name: "Springridge Pentecostal Church", pastor: "Scott Phillips" },
+    { name: "Vicksburg Solid Rock UPC", pastor: "Billy Talbert" },
+    { name: "Yazoo City First UPC", pastor: "Carl Lewis" },
+    { name: "Madison Palabra Viva Parkway", pastor: "Erik Garcia" }
+  ];
+  churches = seedChurches.map((c, i) => ({
+    id: 'seed_' + (i + 1),
+    name: c.name,
+    pastor: c.pastor,
+    address: '',
+    phone: '',
+    email: '',
+    youthLeader: '',
+    notes: ''
+  }));
+  save(KEYS.churches, churches);
+}
+
+// ===== DOCUMENT VAULT =====
+function renderDocs() {
+  const filter = document.getElementById('docCategoryFilter') ? document.getElementById('docCategoryFilter').value : 'all';
+  const filtered = filter === 'all' ? docs : docs.filter(d => d.category === filter);
+  if (!filtered.length) {
+    document.getElementById('docsList').innerHTML = '<div class="empty-state"><p>' + (docs.length ? 'No documents in this category.' : 'No documents yet. Add your first one!') + '</p></div>';
+    return;
+  }
+  const catIcons = { 'Bylaws':'&#128220;', 'Guidelines':'&#128214;', 'Treasurer Reports':'&#128176;', 'Meeting Minutes':'&#128221;', 'Forms':'&#128196;', 'Other':'&#128194;' };
+  document.getElementById('docsList').innerHTML = filtered.sort((a,b) => (b.date||'').localeCompare(a.date||'')).map(d => {
+    const icon = catIcons[d.category] || '&#128194;';
+    const fileInfo = d.fileName ? '<div style="font-size:0.7rem;color:var(--primary);margin-top:3px;">&#128206; ' + esc(d.fileName) + ' (' + d.fileSize + ')</div>' : '';
+    return '<div class="card" style="padding:14px;">' +
+      '<div style="display:flex;gap:12px;align-items:flex-start;margin-bottom:6px;">' +
+        '<div style="font-size:1.5rem;line-height:1;">' + icon + '</div>' +
+        '<div style="flex:1;min-width:0;">' +
+          '<div style="font-weight:700;font-size:0.92rem;">' + esc(d.name) + '</div>' +
+          '<div style="font-size:0.72rem;color:var(--text-muted);">' + esc(d.category) + (d.date ? ' &bull; ' + formatDate(d.date) : '') + '</div>' +
+          (d.desc ? '<div style="font-size:0.75rem;color:var(--text-muted);margin-top:3px;">' + esc(d.desc) + '</div>' : '') +
+          fileInfo +
+        '</div>' +
+      '</div>' +
+      '<div style="display:flex;gap:6px;margin-top:8px;">' +
+        (d.fileData ? '<button type="button" class="btn btn-sm btn-success" onclick="event.stopPropagation();downloadDoc(\''+d.id+'\')">Download</button>' : '') +
+        '<button type="button" class="btn btn-sm btn-outline" onclick="event.stopPropagation();editDoc(\''+d.id+'\')">Edit</button>' +
+        '<button type="button" class="btn btn-sm btn-danger" onclick="event.stopPropagation();deleteDoc(\''+d.id+'\')">Delete</button>' +
+      '</div>' +
+    '</div>';
+  }).join('');
+}
+
+function saveDoc(e) {
+  e.preventDefault();
+  const id = document.getElementById('docEditId').value || ('doc_' + Date.now());
+  const fileInput = document.getElementById('docFile');
+  const existing = docs.find(d => d.id === id);
+
+  function finishSaveDoc(fileData, fileName, fileSize, fileType) {
+    const doc = {
+      id: id,
+      name: document.getElementById('docName').value.trim(),
+      category: document.getElementById('docCategory').value,
+      date: document.getElementById('docDate').value,
+      desc: document.getElementById('docDesc').value.trim(),
+      fileData: fileData || (existing ? existing.fileData : null),
+      fileName: fileName || (existing ? existing.fileName : null),
+      fileSize: fileSize || (existing ? existing.fileSize : null),
+      fileType: fileType || (existing ? existing.fileType : null)
+    };
+    const idx = docs.findIndex(d => d.id === id);
+    if (idx >= 0) docs[idx] = doc; else docs.push(doc);
+    save(KEYS.docs, docs);
+    closeModal('docModal');
+    renderDocs();
+  }
+
+  if (fileInput.files && fileInput.files[0]) {
+    const file = fileInput.files[0];
+    const reader = new FileReader();
+    reader.onload = function(ev) {
+      const sizeStr = file.size < 1024 ? file.size + ' B' : file.size < 1048576 ? (file.size/1024).toFixed(1) + ' KB' : (file.size/1048576).toFixed(1) + ' MB';
+      finishSaveDoc(ev.target.result, file.name, sizeStr, file.type);
+    };
+    reader.readAsDataURL(file);
+  } else {
+    finishSaveDoc(null, null, null, null);
+  }
+}
+
+function editDoc(id) {
+  const d = docs.find(x => x.id === id);
+  if (!d) return;
+  document.getElementById('docEditId').value = d.id;
+  document.getElementById('docName').value = d.name || '';
+  document.getElementById('docCategory').value = d.category || 'Other';
+  document.getElementById('docDate').value = d.date || '';
+  document.getElementById('docDesc').value = d.desc || '';
+  if (d.fileName) {
+    document.getElementById('docFileInfo').innerHTML = '&#128206; Current file: <strong>' + esc(d.fileName) + '</strong> (' + d.fileSize + ') — upload a new file to replace';
+  }
+  document.getElementById('docModalTitle').textContent = 'Edit Document';
+  openModal('docModal');
+}
+
+function deleteDoc(id) {
+  if (!confirm('Delete this document?')) return;
+  docs = docs.filter(d => d.id !== id);
+  save(KEYS.docs, docs);
+  renderDocs();
+}
+
+function downloadDoc(id) {
+  const d = docs.find(x => x.id === id);
+  if (!d || !d.fileData) return;
+  const a = document.createElement('a');
+  a.href = d.fileData;
+  a.download = d.fileName || 'document';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+}
+
+// ===== TEAM =====
+function populateTeamChurchDropdown() {
+  const sel = document.getElementById('teamChurch');
+  if (!sel) return;
+  const val = sel.value;
+  sel.innerHTML = '<option value="">Select church...</option>' + churches.map(c =>
+    '<option value="' + c.id + '">' + esc(c.name) + '</option>'
+  ).join('');
+  sel.value = val;
+}
+
+// Show/hide custom role input
+document.getElementById('teamRole').addEventListener('change', function() {
+  document.getElementById('teamCustomRoleGroup').style.display = this.value === 'Other' ? 'block' : 'none';
+});
+
+function renderTeam() {
+  if (!team.length) {
+    document.getElementById('teamList').innerHTML = '<div class="empty-state"><p>No team members yet. Add your first one!</p></div>';
+    return;
+  }
+  const roleOrder = ['Section Youth Director','Worship Leader','Band Director','Singer','Musician','Creative Team','Media / Tech','Emcee / Host','Youth Leader','Volunteer','Other'];
+  const sorted = [...team].sort((a,b) => {
+    const ai = roleOrder.indexOf(a.role); const bi = roleOrder.indexOf(b.role);
+    const ra = ai >= 0 ? ai : 99; const rb = bi >= 0 ? bi : 99;
+    return ra - rb || (a.name||'').localeCompare(b.name||'');
+  });
+  let lastRole = '';
+  document.getElementById('teamList').innerHTML = sorted.map(m => {
+    const church = churches.find(c => c.id === m.churchId);
+    const churchName = church ? church.name : (m.churchId || '');
+    const roleHeader = m.role !== lastRole ? '<div style="font-size:0.75rem;font-weight:700;color:var(--primary);text-transform:uppercase;letter-spacing:0.05em;margin:14px 0 6px;padding-left:2px;">' + esc(m.role === 'Other' && m.customRole ? m.customRole : m.role) + '</div>' : '';
+    lastRole = m.role;
+    return roleHeader + '<div class="card" style="padding:14px;">' +
+      '<div style="display:flex;gap:12px;align-items:flex-start;margin-bottom:6px;">' +
+        (m.photo ? '<img src="'+m.photo+'" style="width:50px;height:50px;border-radius:50%;object-fit:cover;flex-shrink:0;" alt="'+esc(m.name)+'">' : '<div style="width:50px;height:50px;border-radius:50%;background:var(--primary);display:flex;align-items:center;justify-content:center;color:white;font-weight:700;font-size:1.1rem;flex-shrink:0;">' + esc((m.name||'?')[0].toUpperCase()) + '</div>') +
+        '<div style="flex:1;min-width:0;">' +
+          '<div style="font-weight:700;font-size:0.92rem;">' + esc(m.name) + '</div>' +
+          '<div style="font-size:0.72rem;color:var(--text-muted);">' + esc(m.role === 'Other' && m.customRole ? m.customRole : m.role) + (churchName ? ' &bull; ' + esc(churchName) : '') + '</div>' +
+          (m.phone ? '<div style="font-size:0.75rem;margin-top:3px;"><a href="tel:'+esc(m.phone)+'" style="color:var(--primary);text-decoration:none;">&#128222; '+esc(m.phone)+'</a></div>' : '') +
+          (m.email ? '<div style="font-size:0.75rem;"><a href="mailto:'+esc(m.email)+'" style="color:var(--primary);text-decoration:none;">&#9993; '+esc(m.email)+'</a></div>' : '') +
+          (m.notes ? '<div style="font-size:0.72rem;color:var(--text-muted);margin-top:3px;">' + esc(m.notes) + '</div>' : '') +
+        '</div>' +
+      '</div>' +
+      '<div style="display:flex;gap:6px;margin-top:8px;">' +
+        '<button type="button" class="btn btn-sm btn-outline" onclick="event.stopPropagation();editTeamMember(\''+m.id+'\')">Edit</button>' +
+        '<button type="button" class="btn btn-sm btn-danger" onclick="event.stopPropagation();deleteTeamMember(\''+m.id+'\')">Delete</button>' +
+      '</div>' +
+    '</div>';
+  }).join('');
+}
+
+function saveTeamMember(e) {
+  e.preventDefault();
+  const id = document.getElementById('teamEditId').value || ('tm_' + Date.now());
+  const photoInput = document.getElementById('teamPhoto');
+  const existing = team.find(t => t.id === id);
+
+  function finishSaveTeam(photoData) {
+    const member = {
+      id: id,
+      name: document.getElementById('teamName').value.trim(),
+      role: document.getElementById('teamRole').value,
+      customRole: document.getElementById('teamCustomRole').value.trim(),
+      churchId: document.getElementById('teamChurch').value,
+      phone: document.getElementById('teamPhone').value.trim(),
+      email: document.getElementById('teamEmail').value.trim(),
+      photo: photoData || (existing ? existing.photo : null),
+      notes: document.getElementById('teamNotes').value.trim()
+    };
+    const idx = team.findIndex(t => t.id === id);
+    if (idx >= 0) team[idx] = member; else team.push(member);
+    save(KEYS.team, team);
+    closeModal('teamModal');
+    renderTeam();
+  }
+
+  if (photoInput.files && photoInput.files[0]) {
+    const reader = new FileReader();
+    reader.onload = function(ev) {
+      const img = new Image();
+      img.onload = function() {
+        const canvas = document.createElement('canvas');
+        const max = 300;
+        let w = img.width, h = img.height;
+        if (w > max || h > max) { const r = Math.min(max/w, max/h); w *= r; h *= r; }
+        canvas.width = w; canvas.height = h;
+        canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+        finishSaveTeam(canvas.toDataURL('image/jpeg', 0.6));
+      };
+      img.src = ev.target.result;
+    };
+    reader.readAsDataURL(photoInput.files[0]);
+  } else {
+    finishSaveTeam(null);
+  }
+}
+
+function editTeamMember(id) {
+  const m = team.find(t => t.id === id);
+  if (!m) return;
+  document.getElementById('teamEditId').value = m.id;
+  document.getElementById('teamName').value = m.name || '';
+  document.getElementById('teamRole').value = m.role || '';
+  document.getElementById('teamCustomRole').value = m.customRole || '';
+  document.getElementById('teamCustomRoleGroup').style.display = m.role === 'Other' ? 'block' : 'none';
+  document.getElementById('teamPhone').value = m.phone || '';
+  document.getElementById('teamEmail').value = m.email || '';
+  document.getElementById('teamNotes').value = m.notes || '';
+  if (m.photo) {
+    document.getElementById('teamPhotoPreview').innerHTML = '<img src="'+m.photo+'" style="width:60px;height:60px;border-radius:50%;object-fit:cover;">';
+  }
+  populateTeamChurchDropdown();
+  document.getElementById('teamChurch').value = m.churchId || '';
+  document.getElementById('teamModalTitle').textContent = 'Edit Team Member';
+  openModal('teamModal');
+}
+
+function deleteTeamMember(id) {
+  if (!confirm('Remove this team member?')) return;
+  team = team.filter(t => t.id !== id);
+  save(KEYS.team, team);
+  renderTeam();
+}
+
+// ===== INIT =====
+renderAll();
+// Set default report dates
+const now = new Date();
+document.getElementById('reportFrom').value = `${now.getFullYear()}-01-01`;
+document.getElementById('reportTo').value = now.toISOString().slice(0,10);
+
+// Check reminders on load
+setTimeout(checkReminders, 2000);
+
+// Register service worker
+if ('serviceWorker' in navigator) { navigator.serviceWorker.register('sw.js').catch(()=>{}); }
+</script>
+</body>
+</html>
