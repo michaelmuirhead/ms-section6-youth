@@ -595,6 +595,12 @@ body { font-family: 'Inter', -apple-system, sans-serif; background: var(--bg); c
       <div><div class="list-title">Notes & Minutes</div><div class="list-subtitle">Meeting notes, planning & action items</div></div>
     </div>
   </div>
+  <div class="card" style="cursor:pointer" onclick="showPage('checklists')">
+    <div style="display:flex;align-items:center;gap:12px;">
+      <div class="list-icon green">&#9745;</div>
+      <div><div class="list-title">Checklists</div><div class="list-subtitle">Reusable to-do lists for rallies, events & tasks</div></div>
+    </div>
+  </div>
   <div class="card" style="cursor:pointer" onclick="showPage('reports')">
     <div style="display:flex;align-items:center;gap:12px;">
       <div class="list-icon blue">&#128202;</div>
@@ -607,6 +613,15 @@ body { font-family: 'Inter', -apple-system, sans-serif; background: var(--bg); c
       <div><div class="list-title">Settings</div><div class="list-subtitle">Backup, import & notifications</div></div>
     </div>
   </div>
+</div>
+
+<!-- Checklists Page -->
+<div class="page" id="page-checklists">
+  <div class="card-header" style="margin-bottom:12px;">
+    <h2 style="font-size:1.05rem;font-weight:700;">Checklists</h2>
+    <button class="btn btn-primary btn-sm" onclick="openModal('checklistModal')">+ New Checklist</button>
+  </div>
+  <div id="checklistList"></div>
 </div>
 
 <!-- Document Vault Page -->
@@ -1036,6 +1051,34 @@ body { font-family: 'Inter', -apple-system, sans-serif; background: var(--bg); c
   </div>
 </div>
 
+<!-- Checklist Modal -->
+<div class="modal-overlay" id="checklistModal">
+  <div class="modal">
+    <div class="modal-title"><span id="checklistModalTitle">New Checklist</span><button class="modal-close" onclick="closeModal('checklistModal')">&times;</button></div>
+    <form onsubmit="saveChecklist(event)">
+      <input type="hidden" id="checklistEditId" value="">
+      <div class="form-group"><label class="form-label">Checklist Name</label><input class="form-input" id="checklistName" required placeholder="e.g. Rally Prep Checklist"></div>
+      <div class="form-group"><label class="form-label">Category</label>
+        <select class="form-select" id="checklistCategory">
+          <option value="Rally Prep">Rally Prep</option>
+          <option value="Event Setup">Event Setup</option>
+          <option value="Weekly Tasks">Weekly Tasks</option>
+          <option value="Administrative">Administrative</option>
+          <option value="Other">Other</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Items (one per line)</label>
+        <textarea class="form-textarea" id="checklistItems" style="min-height:160px;" placeholder="Confirm venue&#10;Book preacher&#10;Arrange worship team&#10;Set up sound system&#10;Print flyers"></textarea>
+      </div>
+      <div class="btn-row">
+        <button type="button" class="btn btn-outline" onclick="closeModal('checklistModal')">Cancel</button>
+        <button type="submit" class="btn btn-primary">Save Checklist</button>
+      </div>
+    </form>
+  </div>
+</div>
+
 <!-- Flyer Modal -->
 <div class="modal-overlay" id="flyerModal">
   <div class="modal">
@@ -1139,7 +1182,7 @@ const KEYS = {
   missionSettings: 's6y_missionSettings', rotation: 's6y_rotation', rotationIdx: 's6y_rotationIdx',
   flyers: 's6y_flyers', contacts: 's6y_contacts', notes: 's6y_notes',
   merchItems: 's6y_merchItems', merchSales: 's6y_merchSales',
-  docs: 's6y_docs', team: 's6y_team'
+  docs: 's6y_docs', team: 's6y_team', checklists: 's6y_checklists'
 };
 function load(k) { try { return JSON.parse(localStorage.getItem(k)) || []; } catch { return []; } }
 function loadObj(k, def) { try { return JSON.parse(localStorage.getItem(k)) || def; } catch { return def; } }
@@ -1161,6 +1204,7 @@ let merchItems = load(KEYS.merchItems);
 let merchSales = load(KEYS.merchSales);
 let docs = load(KEYS.docs);
 let team = load(KEYS.team);
+let checklists = load(KEYS.checklists);
 let budgetTab = 'all';
 let noteFilter = 'all';
 let merchTab = 'inventory';
@@ -1174,7 +1218,7 @@ function showPage(page) {
   const navBtn = document.querySelector(`[data-page="${page}"]`);
   if (navBtn) navBtn.classList.add('active');
   // For sub-pages under "More"
-  if (['events','reports','settings','flyers','contacts','notes','merch','docs','team'].includes(page)) {
+  if (['events','reports','settings','flyers','contacts','notes','merch','docs','team','checklists'].includes(page)) {
     document.querySelector('[data-page="more-menu"]').classList.add('active');
   }
   renderAll();
@@ -1194,7 +1238,7 @@ function closeModal(id) {
   document.getElementById(id).classList.remove('active');
   const form = document.getElementById(id).querySelector('form');
   if (form) form.reset();
-  ['rallyEditId','eventEditId','budgetEditId','churchEditId','goalEditId','missionEditId','flyerEditId','contactEditId','noteEditId','merchEditId','stockItemId','docEditId','teamEditId'].forEach(i => {
+  ['rallyEditId','eventEditId','budgetEditId','churchEditId','goalEditId','missionEditId','flyerEditId','contactEditId','noteEditId','merchEditId','stockItemId','docEditId','teamEditId','checklistEditId'].forEach(i => {
     const el = document.getElementById(i); if (el) el.value = '';
   });
   document.getElementById('rallyPhotoPreview') && (document.getElementById('rallyPhotoPreview').innerHTML = '');
@@ -1203,7 +1247,7 @@ function closeModal(id) {
   document.getElementById('docFileInfo') && (document.getElementById('docFileInfo').innerHTML = '');
   if (id === 'teamModal') { document.getElementById('teamCustomRoleGroup').style.display = 'none'; }
   // Reset modal titles
-  const titles = { rallyModal:'Add Youth Rally', churchModal:'Add Church', eventModal:'Add Event', budgetModal:'Add Budget Entry', contactModal:'Add Contact', noteModal:'New Note', merchModal:'Add Merch Item', docModal:'Add Document', teamModal:'Add Team Member' };
+  const titles = { rallyModal:'Add Youth Rally', churchModal:'Add Church', eventModal:'Add Event', budgetModal:'Add Budget Entry', contactModal:'Add Contact', noteModal:'New Note', merchModal:'Add Merch Item', docModal:'Add Document', teamModal:'Add Team Member', checklistModal:'New Checklist' };
   if (titles[id]) { const t = document.getElementById(id).querySelector('.modal-title span'); if(t) t.textContent = titles[id]; }
 }
 
@@ -1570,6 +1614,7 @@ function renderAll() {
   renderMerch();
   renderDocs();
   renderTeam();
+  renderChecklists();
 }
 
 function renderDashboard() {
@@ -2635,7 +2680,7 @@ function checkReminders() {
 
 // ===== EXPORT / IMPORT =====
 function exportData() {
-  const data = { rallies, events, budgetEntries, churches, goals, missionEntries, missionSettings, rotationOrder, rotationIdx, flyers, contacts, notes, merchItems, merchSales, docs, team, exported: new Date().toISOString() };
+  const data = { rallies, events, budgetEntries, churches, goals, missionEntries, missionSettings, rotationOrder, rotationIdx, flyers, contacts, notes, merchItems, merchSales, docs, team, checklists, exported: new Date().toISOString() };
   const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
@@ -2667,6 +2712,7 @@ function importData(file) {
       if (data.merchSales) { merchSales = data.merchSales; save(KEYS.merchSales, merchSales); }
       if (data.docs) { docs = data.docs; save(KEYS.docs, docs); }
       if (data.team) { team = data.team; save(KEYS.team, team); }
+      if (data.checklists) { checklists = data.checklists; save(KEYS.checklists, checklists); }
       renderAll();
       alert('Data imported successfully!');
     } catch { alert('Error reading file.'); }
@@ -2720,6 +2766,105 @@ if (churches.length === 0) {
     notes: ''
   }));
   save(KEYS.churches, churches);
+}
+
+// ===== CHECKLISTS =====
+function renderChecklists() {
+  if (!checklists.length) {
+    document.getElementById('checklistList').innerHTML = '<div class="empty-state"><p>No checklists yet. Create your first one!</p></div>';
+    return;
+  }
+  document.getElementById('checklistList').innerHTML = checklists.map(cl => {
+    const total = cl.items.length;
+    const done = cl.items.filter(i => i.done).length;
+    const pct = total ? Math.round(done / total * 100) : 0;
+    const barColor = pct === 100 ? 'var(--success)' : pct > 50 ? 'var(--accent)' : 'var(--primary)';
+    return '<div class="card" style="padding:14px;margin-bottom:12px;">' +
+      '<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px;">' +
+        '<div>' +
+          '<div style="font-weight:700;font-size:0.92rem;">' + esc(cl.name) + '</div>' +
+          '<div style="font-size:0.72rem;color:var(--text-muted);">' + esc(cl.category) + ' &bull; ' + done + '/' + total + ' done</div>' +
+        '</div>' +
+        '<div style="display:flex;gap:4px;">' +
+          '<button type="button" class="btn btn-sm btn-outline" onclick="event.stopPropagation();editChecklist(\'' + cl.id + '\')">Edit</button>' +
+          '<button type="button" class="btn btn-sm btn-outline-light" onclick="event.stopPropagation();resetChecklist(\'' + cl.id + '\')" title="Uncheck all">&#8634;</button>' +
+          '<button type="button" class="btn btn-sm btn-danger" onclick="event.stopPropagation();deleteChecklist(\'' + cl.id + '\')">Del</button>' +
+        '</div>' +
+      '</div>' +
+      '<div style="background:var(--border);border-radius:4px;height:6px;margin-bottom:10px;overflow:hidden;">' +
+        '<div style="background:' + barColor + ';height:100%;width:' + pct + '%;border-radius:4px;transition:width 0.3s;"></div>' +
+      '</div>' +
+      '<div style="display:flex;flex-direction:column;gap:4px;">' +
+        cl.items.map((item, idx) =>
+          '<label style="display:flex;align-items:flex-start;gap:8px;padding:6px 8px;border-radius:6px;cursor:pointer;background:' + (item.done ? '#f0fdf4' : 'transparent') + ';border:1px solid ' + (item.done ? 'var(--success)' : 'var(--border)') + ';" onclick="event.stopPropagation();toggleChecklistItem(\'' + cl.id + '\',' + idx + ')">' +
+            '<input type="checkbox" ' + (item.done ? 'checked' : '') + ' style="margin-top:2px;accent-color:var(--success);pointer-events:none;">' +
+            '<span style="font-size:0.82rem;' + (item.done ? 'text-decoration:line-through;color:var(--text-muted);' : '') + '">' + esc(item.text) + '</span>' +
+          '</label>'
+        ).join('') +
+      '</div>' +
+    '</div>';
+  }).join('');
+}
+
+function saveChecklist(e) {
+  e.preventDefault();
+  const editId = document.getElementById('checklistEditId').value;
+  const existing = checklists.find(c => c.id === editId);
+  const rawItems = document.getElementById('checklistItems').value.split('\n').map(s => s.trim()).filter(s => s);
+  const items = rawItems.map(text => {
+    if (existing) {
+      const prev = existing.items.find(i => i.text === text);
+      return { text, done: prev ? prev.done : false };
+    }
+    return { text, done: false };
+  });
+  const cl = {
+    id: editId || ('cl_' + Date.now()),
+    name: document.getElementById('checklistName').value.trim(),
+    category: document.getElementById('checklistCategory').value,
+    items: items,
+    createdAt: existing ? existing.createdAt : new Date().toISOString()
+  };
+  const idx = checklists.findIndex(c => c.id === cl.id);
+  if (idx >= 0) checklists[idx] = cl; else checklists.push(cl);
+  save(KEYS.checklists, checklists);
+  closeModal('checklistModal');
+  renderChecklists();
+}
+
+function editChecklist(id) {
+  const cl = checklists.find(c => c.id === id);
+  if (!cl) return;
+  document.getElementById('checklistEditId').value = cl.id;
+  document.getElementById('checklistName').value = cl.name;
+  document.getElementById('checklistCategory').value = cl.category || 'Other';
+  document.getElementById('checklistItems').value = cl.items.map(i => i.text).join('\n');
+  document.getElementById('checklistModalTitle').textContent = 'Edit Checklist';
+  openModal('checklistModal');
+}
+
+function deleteChecklist(id) {
+  if (!confirm('Delete this checklist?')) return;
+  checklists = checklists.filter(c => c.id !== id);
+  save(KEYS.checklists, checklists);
+  renderChecklists();
+}
+
+function resetChecklist(id) {
+  if (!confirm('Uncheck all items in this checklist?')) return;
+  const cl = checklists.find(c => c.id === id);
+  if (!cl) return;
+  cl.items.forEach(i => i.done = false);
+  save(KEYS.checklists, checklists);
+  renderChecklists();
+}
+
+function toggleChecklistItem(clId, idx) {
+  const cl = checklists.find(c => c.id === clId);
+  if (!cl || !cl.items[idx]) return;
+  cl.items[idx].done = !cl.items[idx].done;
+  save(KEYS.checklists, checklists);
+  renderChecklists();
 }
 
 // ===== DOCUMENT VAULT =====
